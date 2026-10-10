@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="theme-color" content="#0f2744">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<style>
+/* meu tema */
+/*Eu sei que meu codigo tem emojis e isso fica meio estranho, mas pedi pra 
+ia colocar pq facilita para os funcionarios que não entendem mt de tecnologia a ver e entender melhor*/
+
+:root {
+  --bg:#f3f5f9; --card:#ffffff; --card2:#f8fafc; --txt:#0f172a; --txt2:#64748b; --txt3:#94a3b8; --line:#e2e8f0;
+  --pri:#1d4ed8; --pri2:#3b82f6; --pri-bg:#eff4ff; --ok:#16a34a; --ok-bg:#e8f7ee; --err:#dc2626; --err-bg:#fdecec;
+  --warn:#d97706; --warn-bg:#fff5e6; --obra:#ea580c; --obra-bg:#fff1e8; --elet:#2563eb; --elet-bg:#eaf1ff;
+  --clt:#15803d; --clt-bg:#e7f6ec; --pj:#7c3aed; --pj-bg:#f1ebff; --ja:#b45309; --ja-bg:#fef3c7;
+  --head1:#0b1f3a; --head2:#1d4ed8; --sombra:0 1px 2px rgba(15,23,42,.05), 0 4px 16px rgba(15,23,42,.06);
+  --raio:16px; --nav:68px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg:#0a1020; --card:#111a2e; --card2:#0e1628; --txt:#e6eaf2; --txt2:#98a3b8; --txt3:#6b778d; --line:#1f2b45;
+  --pri:#6d9bff; --pri2:#3b82f6; --pri-bg:#16244a; --ok:#34d399; --ok-bg:#0f2a22; --err:#f87171; --err-bg:#2c1518;
+  --warn:#fbbf24; --warn-bg:#2b2111; --obra:#fb923c; --obra-bg:#2b1a10; --elet:#60a5fa; --elet-bg:#10213f;
+  --clt:#4ade80; --clt-bg:#0f2a1c; --pj:#a78bfa; --pj-bg:#1f1740; --ja:#fbbf24; --ja-bg:#2b2111;
+  --head1:#070d1c; --head2:#1e3a8a; --sombra:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg:#0a1020; --card:#111a2e; --card2:#0e1628; --txt:#e6eaf2; --txt2:#98a3b8; --txt3:#6b778d; --line:#1f2b45;
+  --pri:#6d9bff; --pri2:#3b82f6; --pri-bg:#16244a; --ok:#34d399; --ok-bg:#0f2a22; --err:#f87171; --err-bg:#2c1518;
+  --warn:#fbbf24; --warn-bg:#2b2111; --obra:#fb923c; --obra-bg:#2b1a10; --elet:#60a5fa; --elet-bg:#10213f;
+  --clt:#4ade80; --clt-bg:#0f2a1c; --pj:#a78bfa; --pj-bg:#1f1740; --ja:#fbbf24; --ja-bg:#2b2111;
+  --head1:#070d1c; --head2:#1e3a8a; --sombra:0 1px 2px rgba(0,0,0,.3), 0 6px 20px rgba(0,0,0,.25);
+  color-scheme: dark;
+}
+
+/*BASE*/
+
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { margin:0; }
+body { font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--txt);
+       font-size:15px; line-height:1.4; -webkit-font-smoothing:antialiased; }
+button { font-family:inherit; cursor:pointer; color:inherit; }
+input, select, textarea { width:100%; padding:12px 14px; font-size:16px; font-family:inherit; color:var(--txt);
+  border:1.5px solid var(--line); border-radius:12px; background:var(--card); outline:none; transition:border-color .15s, box-shadow .15s; }
+input:focus, select:focus { border-color:var(--pri2); box-shadow:0 0 0 4px color-mix(in srgb, var(--pri2) 18%, transparent); }
+label { display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--txt2); margin:14px 0 6px; }
+.escondido { display:none !important; }
+h2.tit { font-size:20px; font-weight:800; margin:4px 0 12px; letter-spacing:-.02em; }
+.sub { font-size:12.5px; color:var(--txt2); }
+.muted { color:var(--txt3); }
+
+/*TOPO*/
+
+
+header { position:sticky; top:0; z-index:20; color:#fff; padding:12px 16px calc(12px);
+  background:linear-gradient(120deg, var(--head1), var(--head2)); display:flex; align-items:center; gap:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.15); }
+header .marca { width:36px; height:36px; border-radius:11px; background:rgba(255,255,255,.14); display:grid; place-items:center; font-size:19px; }
+header .t { flex:1; min-width:0; }
+header .t b { display:block; font-size:16.5px; font-weight:800; letter-spacing:-.01em; }
+header .t span { font-size:12px; opacity:.75; }
+.pill { display:inline-flex; align-items:center; gap:6px; border:0; border-radius:999px; padding:7px 12px; font-size:12.5px; font-weight:700; }
+.pill.le { background:rgba(255,255,255,.14); color:#fff; }
+.pill.ed { background:#22c55e; color:#052e14; }
+.avatar { width:36px; height:36px; border-radius:50%; border:2px solid rgba(255,255,255,.35); background:rgba(255,255,255,.18);
+  color:#fff; font-weight:800; font-size:13px; display:grid; place-items:center; flex:0 0 auto; }
+
+/*LAYOUT*/
+
+main { max-width:720px; margin:0 auto; padding:16px 16px calc(var(--nav) + 150px); }
+.tela { display:none; animation:entra .22s ease; } .tela.on { display:block; }
+@keyframes entra { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+.card { background:var(--card); border:1px solid var(--line); border-radius:var(--raio); padding:16px; margin-bottom:12px; box-shadow:var(--sombra); }
+.card h3 { margin:0 0 10px; font-size:15px; font-weight:800; display:flex; align-items:center; gap:8px; }
+.card h3 .mais { margin-left:auto; font-size:12.5px; font-weight:700; color:var(--pri); background:none; border:0; }
+.row { display:flex; gap:10px; } .row > * { flex:1; min-width:0; }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+/*BOTÕES*/
+
+.btn { width:100%; border:0; border-radius:14px; padding:14px 12px; font-size:15px; font-weight:700; color:#fff; background:var(--pri2);
+  display:inline-flex; align-items:center; justify-content:center; gap:8px; transition:transform .08s, filter .15s, opacity .15s; }
+.btn:active { transform:scale(.97); } .btn:disabled { opacity:.5; }
+.btn.ok { background:#16a34a; } .btn.warn { background:#d97706; } .btn.err { background:#dc2626; }
+.btn.sec { background:var(--card2); color:var(--txt); border:1.5px solid var(--line); }
+.btn.peq { padding:9px 12px; font-size:13px; border-radius:10px; width:auto; }
+.ico { flex:0 0 48px !important; height:48px; border-radius:12px; border:1.5px solid var(--line); background:var(--card); font-size:20px; display:grid; place-items:center; }
+.link { background:none; border:0; color:var(--pri); font-weight:700; font-size:13px; padding:6px; }
+
+/*FILTROS*/
+
+.busca { display:flex; gap:8px; margin:12px 0 10px; }
+.busca .campo { position:relative; flex:1; }
+.busca .campo input { padding-left:40px; }
+.busca .campo::before { content:"🔎"; position:absolute; left:13px; top:50%; transform:translateY(-50%); font-size:15px; opacity:.6; }
+.seg { display:flex; background:var(--card2); border:1px solid var(--line); border-radius:14px; padding:4px; gap:4px; }
+.seg button { flex:1; border:0; background:none; padding:9px 6px; border-radius:10px; font-weight:700; font-size:13.5px; color:var(--txt2); transition:.15s; }
+.seg button.on { background:var(--card); color:var(--txt); box-shadow:0 1px 4px rgba(0,0,0,.12); }
+.seg button.on.Obra { color:var(--obra); } .seg button.on.Elétrica { color:var(--elet); }
+.chips { display:flex; gap:6px; margin:10px 0; overflow-x:auto; scrollbar-width:none; } .chips::-webkit-scrollbar { display:none; }
+.chip { padding:7px 13px; border-radius:999px; border:1.5px solid var(--line); background:var(--card); font-size:13px; font-weight:600; white-space:nowrap; color:var(--txt2); }
+.chip.on { background:var(--txt); color:var(--bg); border-color:var(--txt); }
+
+/*ITENS*/
+
+.item { position:relative; display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--line);
+  border-radius:14px; padding:12px 12px 12px 16px; margin-bottom:8px; overflow:hidden; transition:border-color .15s, background .15s; }
+.item::before { content:""; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--cor, var(--line)); }
+.item.Obra { --cor:var(--obra); } .item.Elétrica { --cor:var(--elet); }
+.item.sel { border-color:var(--pri2); background:var(--pri-bg); }
+.info { flex:1; min-width:0; }
+.nome { font-weight:700; font-size:14.5px; overflow:hidden; text-overflow:ellipsis; }
+.meta { display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-top:5px; }
+.tag { display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; white-space:nowrap; background:var(--card2); color:var(--txt2); border:1px solid var(--line); }
+.tag.Obra { background:var(--obra-bg); color:var(--obra); border-color:transparent; }
+.tag.Elétrica { background:var(--elet-bg); color:var(--elet); border-color:transparent; }
+.tag.CLT { background:var(--clt-bg); color:var(--clt); border-color:transparent; }
+.tag.PJ { background:var(--pj-bg); color:var(--pj); border-color:transparent; }
+.tag.JA { background:var(--ja-bg); color:var(--ja); border-color:transparent; }
+.tag.baixo { background:var(--err-bg); color:var(--err); border-color:transparent; }
+.tag.S { background:var(--err-bg); color:var(--err); border-color:transparent; }
+.tag.E { background:var(--ok-bg); color:var(--ok); border-color:transparent; }
+.tag.D { background:var(--elet-bg); color:var(--elet); border-color:transparent; }
+.tag.A, .tag.X { background:var(--warn-bg); color:var(--warn); border-color:transparent; }
+.tag.Aguardando { background:var(--warn-bg); color:var(--warn); border-color:transparent; }
+.tag.Separado { background:var(--elet-bg); color:var(--elet); border-color:transparent; }
+.tag.Entregue { background:var(--ok-bg); color:var(--ok); border-color:transparent; }
+.tag.Cancelado { opacity:.7; }
+.stepper { display:flex; align-items:center; background:var(--card2); border:1.5px solid var(--line); border-radius:12px; overflow:hidden; flex:0 0 auto; }
+.stepper button { width:38px; height:40px; border:0; background:none; font-size:20px; font-weight:600; color:var(--pri); }
+.stepper input { width:46px; border:0; padding:8px 0; text-align:center; font-weight:800; background:transparent; border-radius:0; box-shadow:none !important; }
+.estq { text-align:right; flex:0 0 auto; }
+.estq b { font-size:18px; font-weight:800; display:block; line-height:1.1; }
+.estq small { font-size:11px; color:var(--txt2); }
+.barra-est { height:6px; border-radius:6px; background:var(--card2); border:1px solid var(--line); overflow:hidden; margin-top:6px; }
+.barra-est i { display:block; height:100%; border-radius:6px; background:var(--ok); }
+.barra-est i.baixo { background:var(--err); } .barra-est i.medio { background:var(--warn); }
+
+/*PAINEL*/
+
+.hero { border-radius:20px; padding:18px; color:#fff; margin-bottom:14px; position:relative; overflow:hidden;
+  background:radial-gradient(120% 140% at 100% 0%, #3b82f6 0%, transparent 55%), linear-gradient(135deg, #0b1f3a, #1d4ed8); box-shadow:var(--sombra); }
+.hero::after { content:"📦"; position:absolute; right:-6px; bottom:-18px; font-size:96px; opacity:.13; transform:rotate(-12deg); }
+.hero b { font-size:21px; font-weight:800; letter-spacing:-.02em; display:block; }
+.hero span { opacity:.8; font-size:13px; }
+.hero .hoje { display:flex; gap:16px; margin-top:14px; font-size:12.5px; }
+.hero .hoje div b { font-size:19px; }
+.kpi { background:var(--card); border:1px solid var(--line); border-radius:var(--raio); padding:14px; text-align:left; box-shadow:var(--sombra); transition:transform .1s; }
+.kpi:active { transform:scale(.97); }
+.kpi .i { width:34px; height:34px; border-radius:10px; display:grid; place-items:center; font-size:17px; margin-bottom:10px; }
+.kpi b { display:block; font-size:24px; font-weight:800; letter-spacing:-.02em; }
+.kpi span { font-size:12.5px; color:var(--txt2); font-weight:600; }
+.kpi.err .i { background:var(--err-bg); } .kpi.err b { color:var(--err); }
+.kpi.pri .i { background:var(--elet-bg); } .kpi.warn .i { background:var(--warn-bg); } .kpi.warn b { color:var(--warn); }
+.kpi.ok .i { background:var(--ok-bg); }
+.atalhos { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:14px 0; }
+.atalho { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:12px 4px; text-align:center; font-size:12px; font-weight:700; color:var(--txt2); box-shadow:var(--sombra); }
+.atalho div { font-size:22px; margin-bottom:4px; }
+.lin { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); }
+.lin:last-child { border-bottom:0; padding-bottom:0; } .lin:first-of-type { padding-top:0; }
+.av { width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-weight:800; font-size:13px; flex:0 0 auto;
+  background:var(--pri-bg); color:var(--pri); }
+
+.nav { position:fixed; left:0; right:0; bottom:0; z-index:25; height:calc(var(--nav) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom); background:color-mix(in srgb, var(--card) 92%, transparent);
+  backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-top:1px solid var(--line); display:flex; }
+.nav button { flex:1; border:0; background:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  font-size:11px; font-weight:700; color:var(--txt3); position:relative; }
+.nav button svg { width:23px; height:23px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; transition:transform .15s; }
+.nav button.on { color:var(--pri); } .nav button.on svg { transform:translateY(-1px) scale(1.06); }
+.nav button.on::before { content:""; position:absolute; top:0; width:28px; height:3px; border-radius:0 0 3px 3px; background:var(--pri); }
+.nav .cont { position:absolute; top:8px; left:calc(50% + 6px); background:var(--err); color:#fff; border-radius:999px; font-size:10px; padding:1px 6px; font-weight:800; }
+
+.barra { position:fixed; left:0; right:0; bottom:calc(var(--nav) + env(safe-area-inset-bottom)); z-index:24; padding:10px 12px;
+  background:var(--card); border-top:1px solid var(--line); box-shadow:0 -6px 20px rgba(0,0,0,.08); transform:translateY(120%); transition:transform .22s ease; }
+.barra.on { transform:none; }
+.barra .resumo { font-size:12.5px; color:var(--txt2); margin:0 2px 8px; max-height:54px; overflow:auto; }
+
+#modal { position:fixed; inset:0; z-index:40; background:rgba(2,6,23,.55); display:none; align-items:flex-end; justify-content:center; backdrop-filter:blur(2px); }
+#modal.on { display:flex; animation:fade .2s; }
+#modal > .sheet { width:100%; max-width:520px; max-height:92vh; overflow:auto; background:var(--card); border-radius:22px 22px 0 0;
+  padding:10px 18px calc(18px + env(safe-area-inset-bottom)); animation:sobe .25s cubic-bezier(.2,.8,.2,1); }
+#modal > .sheet::before { content:""; display:block; width:40px; height:5px; border-radius:5px; background:var(--line); margin:0 auto 12px; }
+@media (min-width:700px) { #modal { align-items:center; } #modal > .sheet { border-radius:22px; } }
+@keyframes sobe { from { transform:translateY(40px); opacity:.4; } to { transform:none; opacity:1; } }
+@keyframes fade { from { opacity:0; } to { opacity:1; } }
+.sheet h3 { margin:0 0 4px; font-size:18px; font-weight:800; }
+.menu-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:12px; }
+.menu-grid button { background:var(--card2); border:1px solid var(--line); border-radius:16px; padding:16px 6px; font-size:12.5px; font-weight:700; }
+.menu-grid button div { font-size:24px; margin-bottom:6px; }
+.pin-input { font-size:30px; letter-spacing:14px; text-align:center; font-weight:800; }
+#ass { width:100%; height:190px; border:2px dashed var(--line); border-radius:14px; background:#fff; touch-action:none; display:block; margin-top:10px; }
+
+
+#toast { position:fixed; left:50%; top:14px; transform:translate(-50%,-150%); z-index:60; max-width:92vw; padding:12px 16px; border-radius:14px;
+  color:#fff; font-weight:700; font-size:14px; box-shadow:0 10px 30px rgba(0,0,0,.25); transition:transform .3s cubic-bezier(.2,.8,.2,1); display:flex; gap:8px; align-items:center; }
+#toast.on { transform:translate(-50%,0); }
+.aviso { display:flex; gap:12px; align-items:flex-start; background:var(--warn-bg); border:1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  color:var(--txt); border-radius:14px; padding:14px; margin-bottom:12px; font-size:13.5px; }
+.aviso .btn { margin-top:10px; }
+.faixa { display:flex; gap:10px; align-items:center; background:var(--pri-bg); border:1px solid color-mix(in srgb, var(--pri2) 30%, transparent);
+  border-radius:14px; padding:10px 12px; margin-bottom:10px; font-size:13.5px; }
+.vazio { text-align:center; color:var(--txt3); padding:30px 10px; font-weight:600; }
+.vazio div { font-size:34px; margin-bottom:6px; }
+.grupo { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--txt2); margin:18px 2px 8px; display:flex; align-items:center; gap:8px; }
+.atraso { color:var(--err); font-weight:800; }
+.sk { border-radius:14px; height:64px; margin-bottom:8px; background:linear-gradient(90deg, var(--card) 25%, var(--card2) 50%, var(--card) 75%);
+  background-size:200% 100%; animation:brilho 1.2s infinite; border:1px solid var(--line); }
+@keyframes brilho { from { background-position:200% 0; } to { background-position:-200% 0; } }
+table.t { width:100%; border-collapse:collapse; font-size:13.5px; } table.t td { padding:8px 2px; border-bottom:1px solid var(--line); }
+table.t tr:last-child td { border-bottom:0; } table.t td.n { text-align:right; white-space:nowrap; font-weight:700; }
+.barras .b { margin-bottom:10px; } .barras .b div { display:flex; justify-content:space-between; font-size:13px; font-weight:600; margin-bottom:4px; }
+.barras .b i { display:block; height:10px; border-radius:6px; background:linear-gradient(90deg, var(--pri2), var(--pri)); }
+.split { display:flex; height:14px; border-radius:8px; overflow:hidden; background:var(--card2); margin:6px 0 8px; }
+.split i:first-child { background:var(--obra); } .split i:last-child { background:var(--elet); }
+details.obra summary { list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-weight:800; }
+details.obra summary::-webkit-details-marker { display:none; }
+details.obra summary::after { content:"▾"; color:var(--txt3); margin-left:8px; transition:transform .2s; }
+details.obra[open] summary::after { transform:rotate(180deg); }
+input[type=checkbox] { width:24px; height:24px; accent-color:var(--pri2); flex:0 0 auto; }
+input[type=file] { padding:10px; font-size:14px; }
+
+/*LOGIN*/
+
+#login { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 16px;
+  background:radial-gradient(90% 60% at 100% 0%, #3b82f6 0%, transparent 60%), linear-gradient(160deg, #0b1f3a 0%, #13306b 60%, #0b1f3a 100%); }
+#login .caixa { width:100%; max-width:400px; }
+#login .logo { text-align:center; color:#fff; margin-bottom:20px; }
+#login .logo div { width:70px; height:70px; border-radius:22px; background:rgba(255,255,255,.14); display:grid; place-items:center; font-size:36px; margin:0 auto 12px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.2); }
+#login .logo b { font-size:24px; font-weight:800; letter-spacing:-.02em; } #login .logo p { margin:4px 0 0; opacity:.7; font-size:14px; }
+#login .card { padding:20px; border-radius:22px; }
+
+/*ETIQUETAS e IMPRESSÃO*/
+
+
+#etiquetas { position:fixed; inset:0; background:#fff; color:#111; z-index:50; overflow:auto; display:none; }
+#etiquetas .topo { position:sticky; top:0; background:#fff; border-bottom:1px solid #ddd; padding:10px; display:flex; gap:8px; }
+#etq-grade { display:flex; flex-wrap:wrap; gap:8px; padding:10px; }
+.etq { width:190px; border:1px dashed #999; border-radius:8px; padding:10px 8px 8px; text-align:center; page-break-inside:avoid; border-top:5px solid #999; }
+.etq.Obra { border-top-color:#ea580c; } .etq.Elétrica { border-top-color:#2563eb; }
+.etq .q { display:flex; justify-content:center; margin-bottom:6px; }
+.etq b { display:block; font-size:13px; } .etq small { font-size:11px; color:#555; }
+@media print {
+  body * { visibility:hidden; }
+  #etiquetas, #etiquetas *, body.imprimir-rel #t-rel, body.imprimir-rel #t-rel * { visibility:visible; }
+  #etiquetas { position:absolute; inset:0; overflow:visible; } #etiquetas .topo { display:none; }
+  body.imprimir-rel #t-rel { position:absolute; left:0; top:0; width:100%; } body.imprimir-rel .no-print { display:none; }
+}
+/* filtros compactos e o modo teste */
+.filtros { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 10px; }
+.filtros select { flex:1 1 150px; min-width:0; padding:9px 10px; font-size:13.5px; border-radius:10px; }
+.t-estoque table.t { font-size:11.5px; table-layout:fixed; } .t-estoque table.t td { padding:7px 3px; vertical-align:top; overflow-wrap:break-word; }
+.t-estoque td:nth-child(1) { width:13%; } .t-estoque td:nth-child(2) { width:25%; } .t-estoque td:nth-child(3) { width:21%; }
+.t-estoque td:nth-child(4) { width:13%; } .t-estoque td:nth-child(5) { width:12%; } .t-estoque td:nth-child(6) { width:16%; }
+.t-estoque table.t tr:first-child td { font-size:9.5px; line-height:1.2; hyphens:auto; }
+.acoes { display:flex; flex-wrap:wrap; gap:4px 12px; align-items:center; margin-top:4px; }
+.acoes .link, .acoes .lixo { padding:2px 0; font-size:12.5px; }
+.tag.T { background:#f3e8ff; color:#7c3aed; border-color:transparent; }
+:root[data-theme="dark"] .tag.T { background:#2a1b4a; color:#c4b5fd; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tag.T { background:#2a1b4a; color:#c4b5fd; } }
+.faixa-teste { display:flex; gap:10px; align-items:center; border-radius:14px; padding:10px 12px; margin-bottom:12px; font-size:13px; font-weight:600;
+  color:#fff; background:repeating-linear-gradient(135deg, #7c3aed 0 14px, #6d28d9 14px 28px); box-shadow:var(--sombra); }
+.faixa-teste button { margin-left:auto; background:rgba(255,255,255,.2); color:#fff; border:0; border-radius:10px; padding:7px 10px; font-weight:700; font-size:12.5px; }
+.lixo { background:none; border:0; font-size:16px; padding:6px; opacity:.7; } .lixo:hover { opacity:1; }
+body.leitura .so-edicao { display:none !important; }
+body:not(.leitura) .so-leitura { display:none !important; }
+</style>
+</head>
+<body class="leitura">
+
+<!--LOGIN -->
+
+<div id="login" class="escondido">
+  <div class="caixa">
+    <div class="logo"><div>📦</div><b>Almoxarifado</b><p>Controle de materiais de obra e elétrica</p></div>
+    <div class="card">
+      <div class="seg" style="margin-bottom:6px">
+        <button id="ab-entrar" class="on" onclick="abaLogin('entrar')">Entrar</button>
+        <button id="ab-criar" onclick="abaLogin('criar')">Criar conta</button>
+      </div>
+      <div id="f-criar" class="escondido">
+        <label>Nome completo</label><input id="l-nome" autocomplete="name">
+        <label>Setor</label><select id="l-setor"><option value="">Selecione...</option></select>
+      </div>
+      <label>E-mail</label><input id="l-email" type="email" autocomplete="email" inputmode="email" placeholder="voce@empresa.com">
+      <label>Senha</label><input id="l-senha" type="password" autocomplete="current-password" placeholder="••••••">
+      <div id="f-criar2" class="escondido">
+        <label>Repita a senha</label><input id="l-senha2" type="password" autocomplete="new-password">
+        <p class="sub" style="margin:10px 0 0">Com a conta você já consulta e faz pedidos. Para registrar retiradas, entradas e devoluções, o responsável libera um PIN pessoal.</p>
+      </div>
+      <button class="btn" id="l-btn" style="margin-top:18px" onclick="enviarLogin()">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!--APP-->
+
+<div id="app" class="escondido">
+  <header>
+    <div class="marca">📦</div>
+    <div class="t"><b id="h-tit">Início</b><span id="h-sub">Almoxarifado</span></div>
+    <button class="pill le" id="h-pill" onclick="alternarEdicao()">🔒 Consulta</button>
+    <button class="avatar" id="h-av" onclick="abrirConta()">?</button>
+  </header>
+
+  <main>
+    <div class="faixa-teste escondido" id="faixa-teste">🧪 <span>MODO TESTE ligado — tudo que for lançado agora fica marcado como teste.</span><button onclick="abrirTestes()">Gerenciar</button></div>
+    <div class="aviso escondido" id="aviso"></div>
+
+    <!--INÍCIO-->
+
+    <section id="t-inicio" class="tela on">
+      <div class="hero"><b id="ola">Olá!</b><span id="hoje-data"></span>
+        <div class="hoje"><div><b id="h-s">0</b> retiradas hoje</div><div><b id="h-e">0</b> entradas</div><div><b id="h-d">0</b> devoluções</div></div>
+      </div>
+      <div class="grid2">
+        <button class="kpi err" onclick="irEstoqueBaixo()"><div class="i">⚠️</div><b id="k-baixo">–</b><span>abaixo do mínimo</span></button>
+        <button class="kpi pri" onclick="irPara('devol')"><div class="i">🔧</div><b id="k-fora">–</b><span>ferramentas fora</span></button>
+        <button class="kpi warn" onclick="irPara('devol')"><div class="i">⏰</div><b id="k-atr">–</b><span>atrasadas</span></button>
+        <button class="kpi ok" onclick="irPara('pedidos')"><div class="i">📋</div><b id="k-ped">–</b><span>pedidos em aberto</span></button>
+      </div>
+      <div class="atalhos">
+        <button class="atalho" onclick="irPara('saida')"><div>📤</div>Retirar</button>
+        <button class="atalho" onclick="irPara('estoque')"><div>📦</div>Estoque</button>
+        <button class="atalho" onclick="irPara('devol')"><div>↩️</div>Devolver</button>
+        <button class="atalho" onclick="irPara('pedidos')"><div>📋</div>Pedidos</button>
+      </div>
+      <div class="card" id="c-rel"></div>
+      <div class="card" id="c-atrasadas"></div>
+      <div class="card" id="c-ultimas"></div>
+    </section>
+
+    <!--RETIRAR-->
+
+    <section id="t-saida" class="tela">
+      <div class="faixa escondido" id="faixa-ped"></div>
+      <div class="card">
+        <label style="margin-top:0">Quem está retirando</label>
+        <div class="row" style="gap:8px">
+          <input id="s-func" list="funcs" placeholder="Digite para buscar o funcionário">
+          <button class="ico so-edicao" title="Novo funcionário" onclick="novoFuncionario()">➕</button>
+        </div>
+        <datalist id="funcs"></datalist>
+        <div id="s-func-info" class="meta"></div>
+        <label>Obra / Elétrica / MND</label>
+        <input id="s-obra" list="obras" placeholder="Selecione ou digite">
+        <datalist id="obras"></datalist>
+      </div>
+      <div id="s-ctl"></div>
+      <div class="busca"><div class="campo"><input id="s-busca" placeholder="Buscar item..."></div><button class="ico" onclick="escanear()">📷</button></div>
+      <div id="s-lista"></div>
+    </section>
+
+    <!--DEVOLVER-->
+
+    <section id="t-devol" class="tela">
+      <h2 class="tit">Ferramentas fora</h2>
+      <div class="busca" style="margin-top:0"><div class="campo"><input id="d-busca" placeholder="Pessoa, obra ou ferramenta..."></div><button class="ico" onclick="escanear()">📷</button></div>
+      <div class="chips" id="d-chips"></div>
+      <div class="filtros"><select id="d-data" onchange="renderPendentes()"></select><select id="d-obra" onchange="renderPendentes()"></select></div>
+      <div id="d-lista"></div>
+    </section>
+
+    <!--PEDIDOS-->
+
+    <section id="t-pedidos" class="tela">
+      <h2 class="tit">Fila de pedidos</h2>
+      <p class="sub" style="margin:-6px 0 12px">Monte a lista na tela <b>Retirar</b> e toque em <b>Enviar pedido</b>. O almoxarife separa e entrega.</p>
+      <div class="busca" style="margin-top:0"><div class="campo"><input id="p-busca" placeholder="Funcionário, obra, item ou quem pediu..."></div></div>
+      <div class="chips" id="p-chips"></div>
+      <div id="p-lista"></div>
+    </section>
+
+    <!--ENTRADA-->
+
+    <section id="t-entrada" class="tela">
+      <div class="so-edicao">
+        <p class="sub" style="margin:0 2px 12px">Escolha os itens que chegaram e a quantidade de cada um. O estoque é somado ao confirmar.</p>
+        <div id="e-ctl"></div>
+        <div class="busca"><div class="campo"><input id="e-busca" placeholder="Buscar item..."></div><button class="ico" onclick="escanear()">📷</button></div>
+        <div id="e-lista"></div>
+      </div>
+    </section>
+
+    <!--ESTOQUE-->
+
+    <section id="t-estoque" class="tela">
+      <div id="x-ctl"></div>
+      <div class="busca"><div class="campo"><input id="x-busca" placeholder="Buscar item..."></div><button class="ico" onclick="escanear()">📷</button></div>
+      <div class="row so-edicao" style="margin:0 0 12px">
+        <button class="btn" onclick="novoItem()">➕ Cadastrar novo item</button>
+        <button class="btn ok" onclick="adicionarAoEstoque()">📥 Adicionar ao estoque</button>
+      </div>
+      <div id="x-lista"></div>
+      <button class="btn sec" style="margin-top:6px" onclick="abrirEtiquetas()">🏷️ Etiquetas QR</button>
+    </section>
+
+    <!--EQUIPE-->
+
+    <section id="t-equipe" class="tela">
+      <div class="row" style="align-items:center"><h2 class="tit" style="margin:0">Equipe</h2>
+        <button class="btn peq so-edicao" style="flex:0 0 auto" onclick="novoFuncionario()">➕ Funcionário</button></div>
+      <div class="busca"><div class="campo"><input id="q-busca" placeholder="Buscar funcionário..."></div></div>
+      <div class="chips" id="q-chips"></div>
+      <div id="q-lista"></div>
+    </section>
+
+    <!--RELATÓRIOS-->
+
+    <section id="t-rel" class="tela">
+      <div class="card no-print">
+        <label style="margin-top:0">Tipo de relatório</label>
+        <div class="seg" id="r-tipo"><button data-c="empregador" class="on">🏢 Empregador</button><button data-c="colaborador">👷 Colaborador</button></div>
+        <div id="r-func-box" class="escondido"><label>Colaborador</label><select id="r-func"></select></div>
+        <label>Período</label>
+        <div class="seg" id="r-modo"><button data-c="mes" class="on">📅 Mês de referência</button><button data-c="periodo">🗓️ Período</button></div>
+        <div id="r-mes-box"><label>Mês de referência</label><select id="r-mes"></select></div>
+        <div id="r-per-box" class="row escondido"><div><label>De</label><input type="date" id="r-ini"></div><div><label>Até</label><input type="date" id="r-fim"></div></div>
+        <button class="btn" style="margin-top:16px" onclick="carregarRelatorio()">📊 Gerar relatório</button>
+      </div>
+      <div id="r-corpo" style="margin-top:4px"></div>
+    </section>
+
+    <!--HISTÓRICO-->
+
+    <section id="t-hist" class="tela">
+      <div class="busca" style="margin-top:0"><div class="campo"><input id="h-busca" placeholder="Pessoa, item ou obra..."></div></div>
+      <div class="chips" id="h-chips"></div>
+      <div class="filtros">
+        <select id="h-periodo" onchange="renderHistorico()"><option value="0">📅 Todo o período</option><option value="1">Hoje</option>
+          <option value="7">Últimos 7 dias</option><option value="30">Últimos 30 dias</option></select>
+        <select id="h-obra" onchange="renderHistorico()"></select>
+        <select id="h-cat" onchange="renderHistorico()"><option value="">Obra e Elétrica</option><option value="OB">🧱 Só Obra</option><option value="EL">⚡ Só Elétrica</option></select>
+      </div>
+      <div id="h-lista"></div>
+    </section>
+  </main>
+
+  <div class="barra" id="barra"><div class="resumo" id="resumo"></div><div class="row" id="barra-btns"></div></div>
+
+  <nav class="nav" id="nav">
+    <button data-t="inicio" class="on"><svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Início</button>
+    <button data-t="saida"><svg viewBox="0 0 24 24"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>Retirar</button>
+    <button data-t="estoque"><svg viewBox="0 0 24 24"><path d="M3 21V8l9-5 9 5v13"/><path d="M7 21v-8h10v8M7 17h10"/></svg>Estoque</button>
+    <button data-t="mais"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Mais<span id="n-ped"></span></button>
+  </nav>
+</div>
+
+<div id="modal" onclick="if(event.target===this)fecharModal()"><div class="sheet" id="modal-corpo"></div></div>
+<div id="etiquetas">
+  <div class="topo">
+    <select id="etq-filtro" style="flex:1;color:#111;background:#fff" onchange="gerarEtiquetas()">
+      <option value="Ferramenta">Só ferramentas e máquinas</option><option value="Todos">Todos os itens</option>
+      <option value="Obra">Só obra</option><option value="Elétrica">Só elétrica</option>
+    </select>
+    <button class="btn peq" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="btn peq sec" style="color:#111" onclick="$('etiquetas').style.display='none'">Fechar</button>
+  </div>
+  <div id="etq-grade"></div>
+</div>
+<input type="file" id="scan-input" accept="image/*" capture="environment" class="escondido">
+<div id="toast"></div>
+
+<script>
+
+/* ESTADO do item pedi pra ia colocar apenas os emojis (muito chato ficar procurando pfv)*/
+
+let TOKEN = '', USR = null, ITENS = [], FUNCS = [], PEND = [], HIST = [], EQUIPE = [], PAINEL = null;
+let PEDS = { abertos:[], fechados:[] }, MESES_DISP = [];
+let UNIDADES_OBRA = [], TIPOS = { Obra:[], Elétrica:[] };
+const ICONE_TIPO = { 'Cabo':'🔌', 'Cabo Alumínio':'🔌', 'Cabo Cobre':'🔌', 'Conector':'🔌', 'Disjuntores':'🎚️', 'Câmera':'📷',
+  'Nobreaks':'🔋', 'Fita':'🎞️', 'Isolantes':'🧤', 'Parafuso':'🔩', 'Porca':'🔩', 'Arruela':'🔩', 'Placas':'🪧',
+  'Caixas de Passagem':'🗃️', 'Suporte':'📐', 'Suporte Simples':'📐', 'Suporte Basculante':'📐', 'Grupos Focais':'🚦',
+  'Colunas':'🏛️', 'Haste':'📏', 'Ferro':'🪨', 'Adesivos':'🏷️', 'Botoeira':'🔘', 'Roldana':'⚙️',
+  'Material':'🧱', 'Ferramenta':'🔧', 'EPI':'🦺', 'Material Iluminação':'💡', 'Fardamento':'👕',
+  'Máquinas':'⚙️', 'Material Escritório':'📎', 'Elétrica':'⚡', 'Consumível':'🧴' };
+const tagTipo = t => `<span class="tag">${ICONE_TIPO[t] || '📦'} ${esc(t)}</span>`;
+let APP_URL = '', EXIGIR_ASS = true, DIAS_ATRASO = 7, PEDIDO_ATUAL = null, ITEM_INICIAL = '';
+let MODO_TESTE = false, filtroPed = 'Em aberto', filtroDev = 'Todas';
+let aba = 'inicio', modoLogin = 'entrar', filtroHist = 'Todos', filtroEquipe = 'Todos';
+const carrinho = { saida:{}, entrada:{} };
+const filtro = { s:{ cat:'Todos', tipo:'Todos' }, e:{ cat:'Todos', tipo:'Todos' }, x:{ cat:'Todos', tipo:'Todos', baixo:false } };
+const TITULOS = { inicio:'Início', saida:'Retirar material', devol:'Devolução', pedidos:'Pedidos', entrada:'Adicionar ao estoque',
+                  estoque:'Estoque', equipe:'Equipe', rel:'Relatórios', hist:'Histórico' };
+const NOMES_MES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const moeda = v => 'R$ ' + (Number(v) || 0).toLocaleString('pt-BR', { minimumFractionDigits:2, maximumFractionDigits:2 });
+const iniciais = n => String(n || '?').trim().split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0]).join('').toUpperCase();
+const mem = {
+  get(k){ try { return localStorage.getItem(k) || ''; } catch(e){ return ''; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} },
+  del(k){ try { localStorage.removeItem(k); } catch(e){} }
+};
+const msgErro = e => (e && e.message ? e.message : String(e || 'Erro de conexão')).replace(/^(Exception|Error):\s*/, '');
+const sk = n => Array(n).fill('<div class="sk"></div>').join('');
+const classeContrato = c => /aprendiz/i.test(c) ? 'JA' : c === 'PJ' ? 'PJ' : 'CLT';
+const tagContrato = c => `<span class="tag ${classeContrato(c)}">${/aprendiz/i.test(c) ? '🎓 ' : ''}${esc(c)}</span>`;
+const vazio = (ico, txt) => `<div class="vazio"><div>${ico}</div>${txt}</div>`;
+const vibrar = () => { try { navigator.vibrate && navigator.vibrate(25); } catch(e){} };
+
+// tema salvo neste aparelho
+(function(){ const t = mem.get('tema'); if (t) document.documentElement.dataset.theme = t; })();
+function trocarTema(){
+  const escuro = getComputedStyle(document.documentElement).colorScheme.indexOf('dark') >= 0;
+  const novo = escuro ? 'light' : 'dark';
+  document.documentElement.dataset.theme = novo; mem.set('tema', novo); fecharModal();
+}
+
+function toast(msg, ok){
+  const t = $('toast');
+  t.innerHTML = (ok ? '✅ ' : '⚠️ ') + esc(msg);
+  t.style.background = ok ? '#15803d' : '#b91c1c';
+  t.classList.add('on'); clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('on'), ok ? 3000 : 5500);
+  if (ok) vibrar();
+}
+function ocupado(b){ document.querySelectorAll('#barra-btns button, #modal-corpo .btn').forEach(x => x.disabled = b); }
+function modal(html){ $('modal-corpo').innerHTML = html; $('modal').classList.add('on'); }
+function fecharModal(){ $('modal').classList.remove('on'); }
+
+function api(nome, ...args){
+  return new Promise((ok, falha) => {
+    google.script.run.withSuccessHandler(ok).withFailureHandler(e => {
+      const m = msgErro(e);
+      if (m.indexOf('SESSAO') === 0) { encerrarLocal(); toast('Sua sessão terminou. Entre novamente.', false); }
+      else if (/Edição bloqueada/.test(m)) { if (USR) USR.podeEditar = false; aplicarModo(); toast(m, false); }
+      else toast(m, false);
+      falha(e);
+    })[nome](TOKEN, ...args);
+  });
+}
+
+function abaLogin(m){
+  modoLogin = m;
+  $('ab-entrar').classList.toggle('on', m === 'entrar');
+  $('ab-criar').classList.toggle('on', m === 'criar');
+  $('f-criar').classList.toggle('escondido', m !== 'criar');
+  $('f-criar2').classList.toggle('escondido', m !== 'criar');
+  $('l-btn').textContent = m === 'criar' ? 'Criar conta' : 'Entrar';
+  if (m === 'criar' && $('l-setor').options.length < 2) {
+    google.script.run.withSuccessHandler(s => {
+      $('l-setor').innerHTML = '<option value="">Selecione...</option>' + s.map(x => `<option>${esc(x)}</option>`).join('');
+    }).setoresCadastro();
+  }
+}
+function enviarLogin(){
+  const email = $('l-email').value.trim(), senha = $('l-senha').value;
+  if (!email || !senha) { toast('Preencha e-mail e senha', false); return; }
+  const b = $('l-btn'); b.disabled = true; b.textContent = 'Aguarde...';
+  const fim = () => { b.disabled = false; b.textContent = modoLogin === 'criar' ? 'Criar conta' : 'Entrar'; };
+  const ok = r => { fim(); TOKEN = r.token; mem.set('tk', TOKEN); USR = r.usuario; abrirApp(); };
+  const erro = e => { fim(); toast(msgErro(e), false); };
+  if (modoLogin === 'criar') {
+    if (senha !== $('l-senha2').value) { fim(); toast('As senhas não conferem', false); return; }
+    google.script.run.withSuccessHandler(r => { ok(r); toast('Conta criada!', true); })
+      .withFailureHandler(erro).criarConta({ nome:$('l-nome').value, setor:$('l-setor').value, email, senha });
+  } else google.script.run.withSuccessHandler(ok).withFailureHandler(erro).entrar(email, senha);
+}
+$('l-senha').addEventListener('keydown', e => { if (e.key === 'Enter' && modoLogin === 'entrar') enviarLogin(); });
+
+function encerrarLocal(){
+  TOKEN = ''; USR = null; mem.del('tk');
+  $('app').classList.add('escondido'); $('login').classList.remove('escondido');
+  $('l-senha').value = ''; fecharModal();
+}
+function sairConta(){ const t = TOKEN; encerrarLocal(); google.script.run.withFailureHandler(() => {}).sair(t); }
+
+/*CONTA e o PIN*/
+
+function abrirConta(){
+  const ed = USR.podeEditar;
+  modal(`<div class="row" style="align-items:center;gap:12px"><div class="av" style="width:52px;height:52px;font-size:18px;flex:0 0 52px">${esc(iniciais(USR.nome))}</div>
+    <div><h3>${esc(USR.nome)}</h3><div class="sub">${esc(USR.email)} · ${esc(USR.setor)}</div></div></div>
+    <div class="aviso" style="margin-top:14px;background:${ed ? 'var(--ok-bg)' : 'var(--warn-bg)'}">${ed
+      ? '🔓 <div><b>Edição liberada</b><br><span class="sub">até ' + new Date(USR.editaAte).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }) + '</span></div>'
+      : '🔒 <div><b>Modo consulta</b><br><span class="sub">' + (USR.temPermissao ? 'Use seu PIN para registrar movimentações.' : 'Peça ao responsável para liberar o seu PIN.') + '</span></div>'}</div>
+    <div style="display:grid;gap:8px">
+      ${USR.temPermissao ? `<button class="btn ${ed ? 'sec' : ''}" onclick="fecharModal();alternarEdicao()">${ed ? '🔒 Bloquear edição' : '🔓 Liberar edição'}</button>` : ''}
+      <button class="btn sec" onclick="trocarTema()">🌓 Alternar tema claro/escuro</button>
+      <button class="btn err" onclick="sairConta()">Sair da conta</button>
+    </div>`);
+}
+function alternarEdicao(){
+  if (USR.podeEditar) api('bloquearEdicao').then(u => { USR = u; aplicarModo(); toast('Edição bloqueada', true); });
+  else pedirPin();
+}
+function pedirPin(){
+  if (!USR.temPermissao) { toast('Seu usuário ainda não tem PIN. Peça ao responsável.', false); return; }
+  modal(`<h3>🔓 Liberar edição</h3><p class="sub" style="margin:4px 0 14px">Digite seu PIN pessoal. A edição fica liberada neste aparelho por 12 horas.</p>
+    <input id="m-pin" class="pin-input" type="password" inputmode="numeric" maxlength="8" autocomplete="one-time-code">
+    <div class="row" style="margin-top:14px"><button class="btn sec" onclick="fecharModal()">Cancelar</button><button class="btn" onclick="confirmarPin()">Liberar</button></div>`);
+  const i = $('m-pin'); setTimeout(() => i.focus(), 80);
+  i.addEventListener('keydown', e => { if (e.key === 'Enter') confirmarPin(); });
+}
+function confirmarPin(){
+  ocupado(true);
+  api('liberarEdicao', $('m-pin').value).then(u => { ocupado(false); USR = u; fecharModal(); aplicarModo(); toast('Edição liberada!', true); })
+    .catch(() => ocupado(false));
+}
+function aplicarModo(){
+  const ed = !!(USR && USR.podeEditar);
+  document.body.classList.toggle('leitura', !ed);
+  $('h-pill').className = 'pill ' + (ed ? 'ed' : 'le');
+  $('h-pill').textContent = ed ? '🔓 Edição' : '🔒 Consulta';
+  $('h-av').textContent = USR ? iniciais(USR.nome) : '?';
+  if (USR) $('h-sub').textContent = USR.nome.split(' ')[0] + ' · ' + USR.setor;
+  atualizarAviso();
+  if (aba === 'devol') renderPendentes();
+  if (aba === 'pedidos') renderPedidos();
+  if (aba === 'estoque') renderEstoque();
+  if (aba === 'hist') renderHistorico();
+  atualizarBarra();
+}
+function atualizarAviso(){
+  const av = $('aviso'), ed = USR && USR.podeEditar, tem = USR && USR.temPermissao;
+  const botao = tem ? '<button class="btn" onclick="pedirPin()">🔓 Liberar edição</button>' : '';
+  let t = '';
+  if (!ed && aba === 'saida') t = `📋 <div>Você pode montar a lista e <b>enviar como pedido</b>. A retirada é confirmada por quem tem PIN.${botao}</div>`;
+  else if (!ed && (aba === 'devol' || aba === 'entrada'))
+    t = `🔒 <div><b>Modo consulta.</b> ${tem ? 'Libere a edição com o seu PIN para registrar.' : 'Peça ao responsável pela planilha para liberar o seu PIN.'}${botao}</div>`;
+  av.innerHTML = t; av.classList.toggle('escondido', !t);
+}
+
+/*CARREGAMENTO*/
+
+
+function abrirApp(){
+  $('login').classList.add('escondido'); $('app').classList.remove('escondido');
+  aplicarModo();
+  carregar().then(() => { if (ITEM_INICIAL) { const c = ITEM_INICIAL; ITEM_INICIAL = ''; tratarCodigo(c); } }).catch(() => {});
+}
+function carregar(){
+  return api('carregar').then(d => {
+    USR = d.usuario; ITENS = d.itens; FUNCS = d.funcionarios; UNIDADES_OBRA = d.unidadesObra || []; TIPOS = { Obra:d.tiposObra || [], 'Elétrica':d.tiposElet || [] }; APP_URL = d.url; PAINEL = d.painel;
+    EXIGIR_ASS = d.exigirAssinatura; DIAS_ATRASO = d.diasAtraso; MESES_DISP = d.meses;
+    MODO_TESTE = !!d.modoTeste; $('faixa-teste').classList.toggle('escondido', !MODO_TESTE);
+    $('obras').innerHTML = d.obras.map(o => `<option value="${esc(o)}">`).join('');
+    $('funcs').innerHTML = FUNCS.map(f => `<option value="${esc(f.nome)}">${esc(f.funcao)} · ${esc(f.contrato)}</option>`).join('');
+    contadorPedidos(d.pedidosAbertos);
+    preencherMeses();
+    aplicarModo();
+    ['s', 'e', 'x'].forEach(controles);
+    render('saida'); render('entrada'); renderEstoque(); renderPainel();
+    if (aba === 'devol') carregarPendentes();
+    if (aba === 'pedidos') carregarPedidos();
+    if (aba === 'hist') carregarHistorico();
+    if (aba === 'equipe') carregarEquipe();
+  });
+}
+let N_PED = 0;
+function contadorPedidos(n){ N_PED = n; $('n-ped').innerHTML = n ? `<span class="cont">${n}</span>` : ''; if ($('k-ped')) $('k-ped').textContent = n; }
+
+try { google.script.url.getLocation(loc => { if (loc && loc.parameter && loc.parameter.item) ITEM_INICIAL = loc.parameter.item; }); } catch(e) {}
+TOKEN = mem.get('tk');
+if (TOKEN) { $('app').classList.remove('escondido'); abrirApp(); } else $('login').classList.remove('escondido');
+
+/*NAVEGAÇÃO*/
+  
+function irPara(t){
+  if (t === 'mais') { abrirMais(); return; }
+  aba = t; fecharModal();
+  const principal = ['inicio', 'saida', 'estoque'].indexOf(t) >= 0 ? t : 'mais';
+  document.querySelectorAll('.nav button').forEach(x => x.classList.toggle('on', x.dataset.t === principal));
+  document.querySelectorAll('.tela').forEach(s => s.classList.toggle('on', s.id === 't-' + t));
+  $('h-tit').textContent = TITULOS[t] || 'Almoxarifado';
+  $('h-sub').textContent = USR ? USR.nome.split(' ')[0] + ' · ' + USR.setor : 'Almoxarifado';
+  if (t === 'devol') carregarPendentes();
+  if (t === 'pedidos') carregarPedidos();
+  if (t === 'estoque') renderEstoque();
+  if (t === 'rel') carregarRelatorio();
+  if (t === 'hist') carregarHistorico();
+  if (t === 'equipe') carregarEquipe();
+  if (t === 'inicio') carregar().catch(() => {});
+  atualizarAviso(); atualizarBarra();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+document.querySelectorAll('.nav button').forEach(b => b.onclick = () => irPara(b.dataset.t));
+function abrirMais(){
+  modal(`<h3>Mais opções</h3><div class="menu-grid">
+    <button onclick="irPara('devol')"><div>↩️</div>Devolver</button>
+    <button onclick="irPara('pedidos')" style="position:relative"><div>📋</div>Pedidos${N_PED ? `<span class="cont" style="position:absolute;top:8px;right:10px;background:var(--err);color:#fff;border-radius:999px;font-size:10px;padding:1px 6px;font-weight:800">${N_PED}</span>` : ''}</button>
+    <button onclick="irPara('equipe')"><div>👷</div>Equipe</button>
+    <button onclick="irPara('rel')"><div>📊</div>Relatórios</button>
+    <button onclick="irPara('hist')"><div>🕘</div>Histórico</button>
+    <button onclick="trocarTema()"><div>🌓</div>Tema</button>
+    <button onclick="abrirTestes()"><div>🧪</div>Dados de teste</button>
+    <button onclick="abrirConta()"><div>👤</div>Minha conta</button></div>`);
+}
+function abrirTestes(){
+  modal(`<h3>🧪 Dados de teste</h3>${sk(2)}`);
+  api('resumoTeste').then(r => {
+    const tem = r.lancamentos || r.pedidos;
+    modal(`<h3>🧪 Dados de teste</h3>
+      <div class="aviso" style="margin-top:10px;background:${r.modoTeste ? '#f3e8ff' : 'var(--card2)'};color:${r.modoTeste ? '#4c1d95' : 'var(--txt)'}">${r.modoTeste ? '🟣' : '⚪'}
+        <div><b>Modo teste ${r.modoTeste ? 'LIGADO' : 'desligado'}</b><br><span class="sub" style="color:inherit">Para ligar ou desligar, mude "Modo teste" para Sim ou Não na aba <b>Config</b> da planilha.
+        Com ele ligado, cada retirada, entrada, devolução, ajuste e pedido fica marcado como <span class="tag T">🧪 TESTE</span>.</span></div></div>
+      <div class="grid2"><div class="kpi" style="box-shadow:none"><b>${r.lancamentos}</b><span>lançamentos de teste</span></div>
+        <div class="kpi" style="box-shadow:none"><b>${r.pedidos}</b><span>pedidos de teste</span></div></div>
+      <p class="sub" style="margin:12px 2px">Ao apagar, o estoque volta a ser o que era antes dos testes. As ferramentas retiradas nos testes deixam de aparecer como pendentes.</p>
+      <div style="display:grid;gap:8px">
+        ${tem ? `<button class="btn err so-edicao" onclick="confirmarApagarTestes()">🗑️ Apagar todos os dados de teste</button>` : ''}
+        ${tem ? '<p class="sub so-leitura" style="margin:0">Libere a edição com seu PIN para apagar.</p>' : ''}
+        <button class="btn sec" onclick="fecharModal()">Fechar</button></div>`);
+  }).catch(() => fecharModal());
+}
+function confirmarApagarTestes(){
+  modal(`<h3>🗑️ Apagar dados de teste?</h3><p class="sub" style="margin:6px 0 14px">Isso não pode ser desfeito. Os lançamentos e pedidos marcados como teste serão apagados e o estoque corrigido.</p>
+    <div class="row"><button class="btn sec" onclick="abrirTestes()">Voltar</button><button class="btn err" onclick="executarApagarTestes()">Apagar</button></div>`);
+}
+function executarApagarTestes(){
+  ocupado(true);
+  api('apagarDadosTeste').then(r => {
+    ocupado(false); fecharModal();
+    toast(`${r.lancamentos} lançamento(s) e ${r.pedidos} pedido(s) de teste apagados`, true);
+    if (r.falhas.length) setTimeout(() => toast('Alguns não puderam ser apagados: ' + r.falhas.join(' | '), false), 3200);
+    carregar(); if (aba === 'hist') carregarHistorico(); if (aba === 'pedidos') carregarPedidos();
+  }).catch(() => ocupado(false));
+}
+
+/* PAINEL DO INÍCIO*/
+
+
+
+function renderPainel(){
+  if (!PAINEL || !USR) return;
+  const h = new Date().getHours();
+  $('ola').textContent = `${h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'}, ${USR.nome.split(' ')[0]} 👋`;
+  $('hoje-data').textContent = new Date().toLocaleDateString('pt-BR', { weekday:'long', day:'numeric', month:'long' });
+  $('h-s').textContent = PAINEL.hoje.saidas; $('h-e').textContent = PAINEL.hoje.entradas; $('h-d').textContent = PAINEL.hoje.devolucoes;
+  $('k-baixo').textContent = PAINEL.nBaixos; $('k-fora').textContent = PAINEL.fora; $('k-atr').textContent = PAINEL.nAtrasadas;
+  resumoRelatorioInicio();
+  $('c-atrasadas').innerHTML = `<h3>⏰ Ferramentas atrasadas <button class="mais" onclick="irPara('devol')">ver tudo</button></h3>` +
+    (PAINEL.atrasadas.length ? PAINEL.atrasadas.map(p => `<div class="lin"><div class="av">${esc(iniciais(p.pessoa))}</div>
+      <div class="info"><div class="nome">${esc(p.item)}</div><div class="sub">${esc(p.pessoa)} · ${esc(p.obra || 'sem obra')}</div></div>
+      <span class="tag baixo">${p.dias} dias</span></div>`).join('') : vazio('🎉', 'Nenhuma ferramenta atrasada'));
+  $('c-ultimas').innerHTML = `<h3>🕘 Últimas movimentações <button class="mais" onclick="irPara('hist')">histórico</button></h3>` +
+    (PAINEL.ultimas.length ? PAINEL.ultimas.map(h => linhaHist(h, undefined, true)).join('') : vazio('📭', 'Nenhuma movimentação ainda'));
+}
+
+let REL_INICIO = null, REL_INICIO_T = 0;
+function resumoRelatorioInicio(){
+  const d = new Date(), mes = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  const titulo = `<h3>📊 Relatórios de ${NOMES_MES[d.getMonth()]} <button class="mais" onclick="irPara('rel')">ver relatórios</button></h3>`;
+  if (REL_INICIO) desenharRelInicio(titulo); else $('c-rel').innerHTML = titulo + sk(2);
+  if (REL_INICIO && aba !== 'inicio' && Date.now() - REL_INICIO_T < 60000) return;
+  api('relatorioObras', mes).then(r => { REL_INICIO = r; REL_INICIO_T = Date.now(); desenharRelInicio(titulo); }).catch(() => {});
+}
+function desenharRelInicio(titulo){
+  const r = REL_INICIO, semPreco = !r.custoTotal;
+  const cO = semPreco ? (r.porCategoriaQtd['Obra'] || 0) : (r.porCategoria['Obra'] || 0);
+  const cE = semPreco ? (r.porCategoriaQtd['Elétrica'] || 0) : (r.porCategoria['Elétrica'] || 0);
+  const tot = Math.max(cO + cE, 1), val = v => semPreco ? fmtN(v) + ' un' : moeda(v);
+  const obras = r.obras.slice(0, 3), maxO = Math.max(1, ...obras.map(o => semPreco ? somaQtd(o) : o.custo));
+  $('c-rel').innerHTML = titulo + `
+    <div class="grid2" style="grid-template-columns:repeat(3,1fr);gap:8px">
+      <div style="background:var(--card2);border-radius:12px;padding:10px;text-align:center"><b style="font-size:20px;display:block">${r.retiradas}</b><span class="sub">retiradas</span></div>
+      <div style="background:var(--card2);border-radius:12px;padding:10px;text-align:center"><b style="font-size:20px;display:block">${r.entradas}</b><span class="sub">entradas</span></div>
+      <div style="background:var(--card2);border-radius:12px;padding:10px;text-align:center"><b style="font-size:${semPreco ? 20 : 14}px;display:block;line-height:1.7">${semPreco ? '—' : moeda(r.custoTotal)}</b><span class="sub">consumo</span></div>
+    </div>
+    ${cO + cE ? `<div class="sub" style="margin-top:12px;font-weight:700">🧱 Obra × ⚡ Elétrica</div>
+      <div class="split"><i style="width:${cO / tot * 100}%"></i><i style="width:${cE / tot * 100}%"></i></div>
+      <div class="row sub"><div><span style="color:var(--obra)">●</span> ${val(cO)}</div><div style="text-align:right"><span style="color:var(--elet)">●</span> ${val(cE)}</div></div>` : ''}
+    ${obras.length ? `<div class="sub" style="margin:12px 0 6px;font-weight:700">🏗️ Obras que mais consumiram</div><div class="barras">` +
+      obras.map(o => { const v = semPreco ? somaQtd(o) : o.custo; return `<div class="b"><div><span>${esc(o.obra)}</span><span>${val(v)}</span></div><i style="width:${Math.max(3, v / maxO * 100)}%"></i></div>`; }).join('') + '</div>' : ''}
+    ${r.top.length ? `<div class="sub" style="margin:4px 0 2px;font-weight:700">🏆 Mais retirados</div>` +
+      r.top.slice(0, 3).map((t, k) => `<div class="lin"><div class="info"><div class="nome">${k + 1}. ${esc(t.nome)}</div></div><b>${fmtN(t.qtd)} <span class="sub">${esc(t.unidade)}</span></b></div>`).join('') : ''}
+    ${!r.retiradas && !r.entradas ? vazio('📭', 'Nenhuma movimentação neste mês ainda') : ''}`;
+}
+function barraEstoque(i){
+  const ref = Math.max(i.minimo * 3, 1), pct = Math.max(3, Math.min(100, i.estoque / ref * 100));
+  const cls = i.estoque <= i.minimo ? 'baixo' : i.estoque <= i.minimo * 1.5 ? 'medio' : '';
+  return `<div class="barra-est"><i class="${cls}" style="width:${pct}%"></i></div>`;
+}
+function irEstoqueBaixo(){ filtro.x = { cat:'Todos', tipo:'Todos', baixo:true }; controles('x'); irPara('estoque'); }
+
+/*FILTROS ITENS */
+
+
+
+function controles(p){
+  const f = filtro[p];
+  const n = c => ITENS.filter(i => c === 'Todos' || i.categoria === c).length;
+  const existentes = [...new Set(ITENS.filter(i => f.cat === 'Todos' || i.categoria === f.cat).map(i => i.tipo))]
+    .sort((a, b) => a.localeCompare(b));
+  if (f.tipo !== 'Todos' && existentes.indexOf(f.tipo) < 0) f.tipo = 'Todos';
+  const tipos = ['Todos', ...existentes].concat(p === 'x' ? ['Baixo'] : []);
+  const nomeTipo = t => t === 'Todos' ? 'Todos os tipos' : t === 'Baixo' ? '⚠️ Estoque baixo' : (ICONE_TIPO[t] || '📦') + ' ' + t;
+  $(p + '-ctl').innerHTML = `<div class="seg">${['Todos', 'Obra', 'Elétrica'].map(c =>
+      `<button class="${c} ${f.cat === c ? 'on' : ''}" data-c="${c}">${c === 'Obra' ? '🧱 ' : c === 'Elétrica' ? '⚡ ' : ''}${c} <span class="muted">${n(c)}</span></button>`).join('')}</div>
+    <div class="chips">${tipos.map(t => `<button class="chip ${(t === 'Baixo' ? f.baixo : f.tipo === t && !f.baixo) ? 'on' : ''}" data-t="${t}">${nomeTipo(t)}</button>`).join('')}</div>`;
+  $(p + '-ctl').querySelectorAll('.seg button').forEach(b => b.onclick = () => { f.cat = b.dataset.c; controles(p); refazer(p); });
+  $(p + '-ctl').querySelectorAll('.chip').forEach(b => b.onclick = () => {
+    if (b.dataset.t === 'Baixo') { f.baixo = !f.baixo; } else { f.tipo = b.dataset.t; f.baixo = false; }
+    controles(p); refazer(p);
+  });
+}
+const refazer = p => p === 'x' ? renderEstoque() : render(p === 's' ? 'saida' : 'entrada');
+function filtrar(p){
+  const f = filtro[p], q = $(p + '-busca').value.trim().toLowerCase();
+  return ITENS.filter(i => (f.cat === 'Todos' || i.categoria === f.cat) && (f.tipo === 'Todos' || i.tipo === f.tipo) &&
+    (!f.baixo || i.estoque <= i.minimo) && (!q || (i.nome + ' ' + i.codigo).toLowerCase().includes(q)));
+}
+$('s-busca').oninput = () => render('saida');
+$('e-busca').oninput = () => render('entrada');
+$('x-busca').oninput = renderEstoque;
+$('d-busca').oninput = renderPendentes;
+$('h-busca').oninput = renderHistorico;
+$('p-busca').oninput = renderPedidos;
+$('q-busca').oninput = renderEquipe;
+$('s-func').oninput = infoFuncionario;
+function infoFuncionario(){
+  const f = FUNCS.find(x => x.nome.toLowerCase() === $('s-func').value.trim().toLowerCase());
+  $('s-func-info').innerHTML = f ? `${tagContrato(f.contrato)}<span class="sub">${esc(f.funcao)}</span>` : '';
+}
+
+/*LISTAS QUANTIDADE*/
+function render(modo){
+  const p = modo === 'saida' ? 's' : 'e', cart = carrinho[modo];
+  const lista = filtrar(p);
+  $(p + '-lista').innerHTML = lista.length ? lista.map(i => {
+    const idx = ITENS.indexOf(i), q = cart[i.codigo] || 0, baixo = i.estoque <= i.minimo;
+    return `<div class="item ${esc(i.categoria)} ${q ? 'sel' : ''}">
+      <div class="info"><div class="nome">${esc(i.nome)}</div>
+        <div class="meta"><span class="tag ${esc(i.categoria)}">${i.categoria === 'Obra' ? '🧱' : '⚡'} ${esc(i.categoria)}</span>
+        ${tagTipo(i.tipo)}
+        <span class="tag ${baixo ? 'baixo' : ''}">${fmtN(i.estoque)} ${esc(i.unidade)}</span>
+        ${i.decimal ? '<span class="tag" title="Aceita quantidade com vírgula">📏 aceita vírgula</span>' : ''}</div>
+        ${modo === 'saida' && q > i.estoque ? `<div class="sub" style="color:var(--warn);margin-top:4px">⚠️ Acima do estoque do sistema — ficará ${fmtN(i.estoque - q)} ${esc(i.unidade)}</div>` : ''}</div>
+      <div class="stepper">
+        <button onclick="mudar('${modo}',${idx},-1)">−</button>
+        <input inputmode="${i.decimal ? 'decimal' : 'numeric'}" value="${q ? fmtN(q) : ''}" placeholder="${i.decimal ? '0,0' : '0'}" onchange="definir('${modo}',${idx},this.value)">
+        <button onclick="mudar('${modo}',${idx},1)">+</button>
+      </div></div>`;
+  }).join('') : vazio('🔍', 'Nenhum item encontrado');
+  atualizarBarra();
+}
+function mudar(modo, idx, d){ const c = ITENS[idx].codigo; definir(modo, idx, (carrinho[modo][c] || 0) + d); }
+function definir(modo, idx, v){
+  const it = ITENS[idx];
+  let q = Number(String(v).replace(/\s/g, '').replace(',', '.')) || 0;
+  if (q < 0) q = 0;
+  if (it.decimal) q = Math.round(q * 100) / 100;
+  else if (!Number.isInteger(q)) { q = Math.round(q); toast(`${it.nome} é contado em ${it.unidade}: só número inteiro`, false); }
+  if (q) carrinho[modo][it.codigo] = q; else delete carrinho[modo][it.codigo];
+  render(modo);
+}
+/** 2.5 -> "2,5" */
+const fmtN = v => String(Math.round((Number(v) || 0) * 100) / 100).replace('.', ',');
+function resumoCarrinho(cart){
+  return Object.keys(cart).map(c => { const i = ITENS.find(x => x.codigo === c); return i ? `${fmtN(cart[c])} ${i.unidade} ${i.nome}` : ''; }).filter(Boolean);
+}
+function atualizarBarra(){
+  const ed = USR && USR.podeEditar;
+  let resumo = '', btns = '';
+  if (aba === 'saida') {
+    const r = resumoCarrinho(carrinho.saida);
+    if (r.length) {
+      resumo = `<b>${r.length} item(ns):</b> ` + esc(r.join(' · '));
+      btns = `<button class="btn sec" style="flex:0 0 24%" onclick="limpar()">Limpar</button>` +
+        (PEDIDO_ATUAL ? '' : `<button class="btn warn" onclick="enviarPedido()">📋 Pedido</button>`) +
+        (ed ? `<button class="btn ok" onclick="iniciarRetirada()">✍️ Retirar</button>` : '');
+    }
+  } else if (aba === 'entrada' && ed) {
+    const r = resumoCarrinho(carrinho.entrada);
+    if (r.length) {
+      resumo = `<b>${r.length} item(ns):</b> ` + esc(r.join(' · '));
+      btns = `<button class="btn sec" style="flex:0 0 30%" onclick="limpar()">Limpar</button><button class="btn ok" onclick="enviarEntrada()">📥 Adicionar ao estoque</button>`;
+    }
+  } else if (aba === 'devol' && ed) {
+    const sel = document.querySelectorAll('.dchk:checked').length;
+    if (sel) {
+      resumo = `<b>${sel}</b> ferramenta(s) marcada(s) para devolução`;
+      btns = `<button class="btn sec" style="flex:0 0 30%" onclick="limpar()">Limpar</button><button class="btn ok" onclick="enviarDevolucao()">↩️ Confirmar devolução</button>`;
+    }
+  }
+  $('barra').classList.toggle('on', !!btns);
+  $('resumo').innerHTML = resumo; $('barra-btns').innerHTML = btns;
+}
+function limpar(){
+  if (aba === 'devol') { document.querySelectorAll('.dchk').forEach(c => c.checked = false); atualizarBarra(); return; }
+  carrinho[aba] = {};
+  if (aba === 'saida') sairDoPedido();
+  render(aba);
+}
+
+/*RETIRADA e ASSINATURA*/
+
+let assinou = false;
+function validarRetirada(){
+  const f = $('s-func').value.trim();
+  if (!f) { toast('Escolha quem está retirando', false); $('s-func').focus(); window.scrollTo({ top:0, behavior:'smooth' }); return null; }
+  if (FUNCS.length && !FUNCS.some(x => x.nome.toLowerCase() === f.toLowerCase())) { toast(`"${f}" não está na lista de funcionários`, false); return null; }
+  return f;
+}
+function iniciarRetirada(){
+  const f = validarRetirada(); if (!f) return;
+  const r = resumoCarrinho(carrinho.saida);
+  modal(`<h3>✍️ Assinatura</h3><p class="sub" style="margin:2px 0 10px"><b>${esc(f)}</b> confirma a retirada de:</p>
+    <div class="card" style="padding:10px 14px;margin:0;box-shadow:none">${r.map(x => `<div style="padding:3px 0;font-size:14px">• ${esc(x)}</div>`).join('')}</div>
+    <canvas id="ass"></canvas><p class="sub" style="margin:6px 0 0">${EXIGIR_ASS ? 'Assine com o dedo dentro do quadro.' : 'Assinatura opcional.'}</p>
+    <div class="row" style="margin-top:12px"><button class="btn sec" onclick="fecharModal()">Voltar</button>
+      <button class="btn sec" onclick="iniciarCanvas()">Limpar</button><button class="btn ok" onclick="confirmarRetirada()">Confirmar</button></div>`);
+  setTimeout(iniciarCanvas, 60);
+}
+function iniciarCanvas(){
+  const c = $('ass'); if (!c) return;
+  const dpr = window.devicePixelRatio || 1;
+  c.width = c.clientWidth * dpr; c.height = c.clientHeight * dpr;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+  ctx.scale(dpr, dpr); ctx.lineWidth = 2.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#0f172a';
+  assinou = false;
+  let des = false;
+  const pos = e => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  c.onpointerdown = e => { des = true; c.setPointerCapture(e.pointerId); const [x, y] = pos(e); ctx.beginPath(); ctx.moveTo(x, y); };
+  c.onpointermove = e => { if (!des) return; const [x, y] = pos(e); ctx.lineTo(x, y); ctx.stroke(); assinou = true; };
+  c.onpointerup = c.onpointercancel = () => des = false;
+}
+function confirmarRetirada(){
+  if (EXIGIR_ASS && !assinou) { toast('Falta a assinatura', false); return; }
+  const itens = Object.keys(carrinho.saida).map(c => ({ codigo:c, qtd:carrinho.saida[c] }));
+  const assinatura = assinou ? $('ass').toDataURL('image/png') : '';
+  ocupado(true);
+  api('registrarSaida', { funcionario:$('s-func').value.trim(), obra:$('s-obra').value.trim(), itens, assinatura, pedidoId:PEDIDO_ATUAL }).then(r => {
+    ocupado(false); fecharModal(); toast(`Retirada registrada (${r.total} itens)`, true);
+    if (r.negativos && r.negativos.length) setTimeout(() => toast('Estoque negativo — lance a entrada: ' + r.negativos.join(', '), false), 3200);
+    carrinho.saida = {}; sairDoPedido(); $('s-busca').value = ''; $('s-func').value = ''; infoFuncionario(); carregar();
+  }).catch(() => ocupado(false));
+}
+
+/*PEDIDOS*/
+
+
+function enviarPedido(){
+  const f = validarRetirada(); if (!f) return;
+  const itens = Object.keys(carrinho.saida).map(c => ({ codigo:c, qtd:carrinho.saida[c] }));
+  ocupado(true);
+  api('criarPedido', { funcionario:f, obra:$('s-obra').value.trim(), itens }).then(() => {
+    ocupado(false); toast('Pedido enviado para a fila!', true);
+    carrinho.saida = {}; $('s-busca').value = ''; $('s-func').value = ''; infoFuncionario(); carregar();
+  }).catch(() => ocupado(false));
+}
+function carregarPedidos(){
+  $('p-lista').innerHTML = sk(3);
+  api('listarPedidos').then(p => { PEDS = p; contadorPedidos(p.abertos.length); renderPedidos(); }).catch(() => {});
+}
+function renderPedidos(){
+  const ed = USR && USR.podeEditar;
+  const card = (o, i, aberto) => `<div class="card">
+    <div class="row" style="align-items:center"><div class="av" style="flex:0 0 38px">${esc(iniciais(o.funcionario))}</div>
+      <div><div class="nome">${esc(o.funcionario)}</div><div class="sub">${esc(o.obra || 'Sem obra')} · ${esc(o.data)}</div></div>
+      <span class="tag ${esc(o.status)}" style="flex:0 0 auto">${esc(o.status)}</span></div>
+    <div style="margin:10px 0 0;padding:10px 12px;background:var(--card2);border-radius:12px;font-size:13.5px">
+      ${o.itens.map(x => `<div style="padding:2px 0">• <b>${esc(x.qtd)} ${esc(x.unidade)}</b> ${esc(x.nome)}</div>`).join('')}</div>
+    <div class="sub" style="margin-top:8px">Pedido por ${esc(o.solicitante)}${o.atendidoPor ? ' · ' + esc(o.status.toLowerCase()) + ' por ' + esc(o.atendidoPor) : ''}${o.obs.replace(/\[TESTE\]\s*/, '') ? ' · ' + esc(o.obs.replace(/\[TESTE\]\s*/, '')) : ''}</div>
+    ${o.teste ? '<div style="margin-top:8px"><span class="tag T">🧪 TESTE</span></div>' : ''}
+    ${aberto && (ed || o.meu) ? `<div class="row" style="margin-top:12px">
+      ${ed ? `<button class="btn ok" onclick="atenderPedido(${i})">📦 Entregar</button>` : ''}
+      ${ed && o.status === 'Aguardando' ? `<button class="btn" onclick="statusPedido(${i},'Separado')">Separado</button>` : ''}
+      <button class="btn sec" onclick="statusPedido(${i},'Cancelado')">Cancelar</button></div>` : ''}
+    <div class="so-edicao" style="text-align:right;margin-top:6px"><button class="link" style="color:var(--err)" onclick="pedirApagarPedido('${esc(o.id)}')">🗑️ Apagar pedido</button></div></div>`;
+  const todos = PEDS.abertos.concat(PEDS.fechados);
+  const cont = f => todos.filter(f).length;
+  const ops = [['Em aberto', o => ['Aguardando', 'Separado'].indexOf(o.status) >= 0], ['Aguardando', o => o.status === 'Aguardando'],
+    ['Separado', o => o.status === 'Separado'], ['Entregue', o => o.status === 'Entregue'], ['Cancelado', o => o.status === 'Cancelado'],
+    ['🧪 Testes', o => o.teste], ['Todos', () => true]];
+  if (!ops.some(x => x[0] === filtroPed)) filtroPed = 'Em aberto';
+  $('p-chips').innerHTML = ops.filter(([t, f]) => t !== '🧪 Testes' || cont(f)).map(([t, f]) =>
+    `<button class="chip ${filtroPed === t ? 'on' : ''}" data-t="${t}">${t} · ${cont(f)}</button>`).join('');
+  $('p-chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { filtroPed = b.dataset.t; renderPedidos(); });
+  const q = $('p-busca').value.trim().toLowerCase();
+  const fil = ops.find(x => x[0] === filtroPed)[1];
+  const busca = o => !q || (o.funcionario + ' ' + o.obra + ' ' + o.solicitante + ' ' + o.itens.map(x => x.nome).join(' ')).toLowerCase().includes(q);
+  const html = todos.filter(o => fil(o) && busca(o)).map(o => {
+    const i = PEDS.abertos.indexOf(o);
+    return card(o, i, i >= 0);
+  }).join('');
+  $('p-lista').innerHTML = html || vazio('📭', filtroPed === 'Em aberto' && !q ? 'Nenhum pedido em aberto' : 'Nenhum pedido encontrado');
+}
+function pedirApagarPedido(id){
+  const o = PEDS.abertos.concat(PEDS.fechados).find(x => x.id === id);
+  modal(`<h3>🗑️ Apagar pedido?</h3><p class="sub" style="margin:6px 0 10px">O pedido some da fila e da planilha. ${o && o.status === 'Entregue' ? 'A retirada que atendeu este pedido <b>continua registrada</b> — para desfazê-la, apague-a no Histórico.' : ''}</p>
+    ${o ? `<div class="card" style="padding:10px 14px;box-shadow:none"><b>${esc(o.funcionario)}</b> · ${esc(o.status)}<div class="sub">${esc(o.itens.map(x => x.qtd + ' ' + x.nome).join(', '))}</div></div>` : ''}
+    <div class="row" style="margin-top:12px"><button class="btn sec" onclick="fecharModal()">Cancelar</button><button class="btn err" onclick="apagarPedido('${esc(id)}')">Apagar</button></div>`);
+}
+function apagarPedido(id){
+  ocupado(true);
+  api('excluirPedido', id).then(() => { ocupado(false); fecharModal(); toast('Pedido apagado', true); carregarPedidos(); carregar(); })
+    .catch(() => ocupado(false));
+}
+function statusPedido(i, st){
+  api('atualizarPedido', PEDS.abertos[i].id, st).then(() => { toast(st === 'Cancelado' ? 'Pedido cancelado' : 'Marcado como separado', true); carregarPedidos(); }).catch(() => {});
+}
+function atenderPedido(i){
+  const o = PEDS.abertos[i];
+  PEDIDO_ATUAL = o.id; carrinho.saida = {};
+  const faltas = [];
+  o.itens.forEach(x => {
+    const it = ITENS.find(y => y.codigo === x.codigo);
+    if (!it) { faltas.push(x.nome); return; }
+    carrinho.saida[x.codigo] = x.qtd;
+    if (x.qtd > it.estoque) faltas.push(`${x.nome} (sistema: ${it.estoque})`);
+  });
+  $('s-func').value = o.funcionario; $('s-obra').value = o.obra; infoFuncionario();
+  $('faixa-ped').innerHTML = `📋 <span style="flex:1">Atendendo o pedido de <b>${esc(o.funcionario)}</b>. Confira e toque em Retirar.</span><button class="link" onclick="limpar()">Sair</button>`;
+  $('faixa-ped').classList.remove('escondido');
+  $('s-busca').value = ''; filtro.s = { cat:'Todos', tipo:'Todos' }; controles('s');
+  irPara('saida'); render('saida');
+  if (faltas.length) toast('Acima do estoque do sistema (o estoque ficará negativo): ' + faltas.join(', '), false);
+}
+function sairDoPedido(){ PEDIDO_ATUAL = null; $('faixa-ped').classList.add('escondido'); }
+
+/*ENTRADA DOS FUNCIONÁRIOS*/
+
+function prepararArquivo(file){
+  return new Promise((ok, falha) => {
+    if (!file) return ok(null);
+    if (file.type === 'application/pdf') {
+      if (file.size > 8 * 1024 * 1024) return falha(new Error('PDF muito grande (máx. 8 MB)'));
+      const fr = new FileReader(); fr.onload = () => ok({ nome:file.name, mime:'application/pdf', dados:fr.result }); fr.onerror = falha; fr.readAsDataURL(file);
+      return;
+    }
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, 1600 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = img.width * s; c.height = img.height * s;
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(img.src);
+      ok({ nome:(file.name || 'nota').replace(/\.\w+$/, '') + '.jpg', mime:'image/jpeg', dados:c.toDataURL('image/jpeg', 0.75) });
+    };
+    img.onerror = () => falha(new Error('Não consegui abrir a imagem'));
+    img.src = URL.createObjectURL(file);
+  });
+}
+function enviarEntrada(){
+  const itens = Object.keys(carrinho.entrada).map(c => ({ codigo:c, qtd:carrinho.entrada[c] }));
+  ocupado(true);
+  api('registrarEntrada', { origem:'', itens, anexo:null })
+    .then(r => {
+      ocupado(false); toast(`Adicionado ao estoque (${r.total} itens)`, true);
+      carrinho.entrada = {}; $('e-busca').value = ''; carregar();
+    }).catch(() => ocupado(false));
+}
+
+/*DEVOLUÇÃO*/
+
+
+function carregarPendentes(){
+  $('d-lista').innerHTML = sk(4);
+  api('listarPendentes').then(p => { PEND = p; renderPendentes(); }).catch(() => {});
+}
+let DATA_DEV_ANTES = '';
+function renderPendentes(){
+  const q = $('d-busca').value.trim().toLowerCase();
+  const nAtr = PEND.filter(p => p.dias >= DIAS_ATRASO).length;
+  $('d-chips').innerHTML = [['Todas', PEND.length], ['⏰ Atrasadas', nAtr], ['🧱 Obra', PEND.filter(p => p.codigo.indexOf('EL') !== 0).length],
+    ['⚡ Elétrica', PEND.filter(p => p.codigo.indexOf('EL') === 0).length]]
+    .map(([t, n]) => `<button class="chip ${filtroDev === t ? 'on' : ''}" data-t="${t}">${t} · ${n}</button>`).join('');
+  $('d-chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { filtroDev = b.dataset.t; renderPendentes(); });
+  const obras = [...new Set(PEND.map(p => p.obra || 'Sem obra'))].sort();
+  const obraSel = obras.indexOf($('d-obra').value) >= 0 ? $('d-obra').value : '';
+  $('d-obra').innerHTML = '<option value="">🏗️ Todas as obras</option>' + obras.map(o => `<option ${o === obraSel ? 'selected' : ''}>${esc(o)}</option>`).join('');
+  
+  const datas = {};
+  PEND.forEach(p => { const d = p.dia || ''; datas[d] = datas[d] || { txt:p.diaTxt || p.data.slice(0, 5), n:0 }; datas[d].n++; });
+  const chaves = Object.keys(datas).sort().reverse();
+  let dataSel = $('d-data').value;
+  if (dataSel && !datas[dataSel]) {
+    if (DATA_DEV_ANTES === dataSel) toast(`Tudo que saiu em ${$('d-data').selectedOptions[0] ? $('d-data').selectedOptions[0].dataset.txt : 'essa data'} foi devolvido`, true);
+    dataSel = '';
+  }
+  $('d-data').innerHTML = '<option value="" data-txt="">📅 Todas as datas</option>' +
+    chaves.map(d => `<option value="${esc(d)}" data-txt="${esc(datas[d].txt)}" ${d === dataSel ? 'selected' : ''}>📅 ${esc(datas[d].txt)} · ${datas[d].n} item(ns)</option>`).join('');
+  DATA_DEV_ANTES = dataSel;
+  const lista = PEND.filter(p => (!q || (p.pessoa + ' ' + p.obra + ' ' + p.item + ' ' + p.codigo).toLowerCase().includes(q)) &&
+    (filtroDev !== '⏰ Atrasadas' || p.dias >= DIAS_ATRASO) && (filtroDev !== '🧱 Obra' || p.codigo.indexOf('EL') !== 0) &&
+    (filtroDev !== '⚡ Elétrica' || p.codigo.indexOf('EL') === 0) && (!obraSel || (p.obra || 'Sem obra') === obraSel) &&
+    (!dataSel || p.dia === dataSel));
+  if (!lista.length) { $('d-lista').innerHTML = vazio('🎉', q || filtroDev !== 'Todas' || obraSel || dataSel ? 'Nada encontrado' : 'Nenhuma ferramenta fora'); atualizarBarra(); return; }
+  const contrato = n => (FUNCS.find(f => f.nome.toLowerCase() === n.toLowerCase()) || {}).contrato || '';
+  const grupos = {};
+  lista.forEach(p => (grupos[p.dia || ''] = grupos[p.dia || ''] || []).push(p));
+  const semana = d => d ? new Date(d + 'T12:00').toLocaleDateString('pt-BR', { weekday:'long' }) : '';
+  $('d-lista').innerHTML = Object.keys(grupos).sort().reverse().map(dia => {
+    const itens = grupos[dia].sort((a, b) => a.pessoa.localeCompare(b.pessoa));
+    const txt = (itens[0].diaTxt || itens[0].data.slice(0, 5));
+    return `<div class="grupo"><span style="white-space:nowrap">📅 ${esc(txt)}</span> <span class="muted" style="text-transform:none;font-weight:600">${esc(semana(dia))} · ${itens.length} item(ns)</span>
+      <button class="link so-edicao" style="margin-left:auto" onclick="marcarTodos(this)">marcar todos</button></div>` +
+    itens.map(p => { const c = contrato(p.pessoa); return `<label class="item ${p.codigo.indexOf('EL') === 0 ? 'Elétrica' : 'Obra'}" style="margin:0 0 8px;text-transform:none;letter-spacing:0;font-size:inherit;color:inherit;font-weight:inherit">
+      <input type="checkbox" class="dchk so-edicao" data-a="${esc(p.aba)}" data-l="${p.linha}" data-p="${esc(p.pedido)}" onchange="atualizarBarra()">
+      <div class="info"><div class="nome">${esc(p.item)}</div>
+        <div class="meta"><span class="sub">👷 <b>${esc(p.pessoa)}</b></span>${c ? tagContrato(c) : ''}</div>
+        <div class="meta"><span class="sub">${esc(p.obra || 'Sem obra')} · ${esc(p.data.slice(6))}</span>
+        ${p.dias >= DIAS_ATRASO ? `<span class="tag baixo">${p.dias} dias</span>` : `<span class="tag">${p.dias} dia(s)</span>`}</div></div>
+      <div class="stepper so-edicao" onclick="event.preventDefault()"><input id="dq-${p.linha}-${esc(p.aba).replace(/\W/g, '')}" inputmode="decimal" value="${p.pendente}" style="width:52px"></div>
+      <div class="estq so-leitura"><b>${p.pendente}</b><small>un</small></div></label>`; }).join('');
+  }).join('');
+  atualizarBarra();
+}
+function marcarTodos(btn){
+  let el = btn.parentElement.nextElementSibling;
+  while (el && el.classList.contains('item')) { const c = el.querySelector('.dchk'); if (c) c.checked = true; el = el.nextElementSibling; }
+  atualizarBarra();
+}
+function enviarDevolucao(){
+  const itens = [...document.querySelectorAll('.dchk:checked')].map(c => ({
+    aba:c.dataset.a, linha:Number(c.dataset.l), pedido:c.dataset.p, qtd:$('dq-' + c.dataset.l + '-' + c.dataset.a.replace(/\W/g, '')).value }));
+  ocupado(true);
+  api('registrarDevolucao', { itens }).then(r => {
+    ocupado(false); toast(`Devolução registrada (${r.total} itens)`, true); $('d-busca').value = ''; carregarPendentes(); carregar();
+  }).catch(() => ocupado(false));
+}
+
+/*ESTOQUE*/
+
+
+function renderEstoque(){
+  const lista = filtrar('x').slice().sort((a, b) => (a.estoque <= a.minimo ? 0 : 1) - (b.estoque <= b.minimo ? 0 : 1) || a.nome.localeCompare(b.nome));
+  $('x-lista').innerHTML = lista.map(i => {
+    const baixo = i.estoque <= i.minimo, idx = ITENS.indexOf(i);
+    return `<div class="item ${esc(i.categoria)}"><div class="info"><div class="nome">${esc(i.nome)}</div>
+      <div class="meta"><span class="tag">${esc(i.codigo)}</span>${tagTipo(i.tipo)}
+      <span class="sub">mín. ${i.minimo}${i.preco ? ' · ' + moeda(i.preco) : ''}</span></div>${barraEstoque(i)}</div>
+      <div class="estq"><b style="${baixo ? 'color:var(--err)' : ''}">${i.estoque}</b><small>${esc(i.unidade)}</small>
+      <div><button class="link so-edicao" style="padding:4px 0 0" onclick="abrirAjuste(${idx})">Ajustar</button></div></div></div>`;
+  }).join('') || vazio('🔍', 'Nenhum item');
+}
+function abrirAjuste(idx){
+  const i = ITENS[idx];
+  const tipos = TIPOS[i.categoria] && TIPOS[i.categoria].length ? TIPOS[i.categoria].slice() : ['Consumível', 'Ferramenta'];
+  if (tipos.indexOf(i.tipo) < 0) tipos.unshift(i.tipo);
+  modal(`<h3>📝 Ajustar item</h3><p class="sub" style="margin:2px 0 0"><span class="tag ${esc(i.categoria)}">${esc(i.categoria)}</span> ${esc(i.codigo)} · no sistema: <b>${fmtN(i.estoque)} ${esc(i.unidade)}</b></p>
+    <div class="card" style="margin:14px 0 0;box-shadow:none">
+      <div class="grupo" style="margin:0 0 4px">✏️ Dados do item</div>
+      <label>Nome do item</label><input id="ed-nome" value="${esc(i.nome)}">
+      <label>Tipo</label><select id="ed-tipo">${tipos.map(t => `<option value="${esc(t)}" ${t === i.tipo ? 'selected' : ''}>${ICONE_TIPO[t] || '📦'} ${esc(t)}</option>`).join('')}</select>
+      <p class="sub" style="margin:6px 2px 0">Ferramenta e Máquinas precisam ser devolvidas; os outros tipos saem do estoque de vez.</p>
+      <button class="btn" style="margin-top:12px" onclick="salvarDadosItem(${idx})">💾 Salvar nome e tipo</button>
+    </div>
+    <div class="card" style="margin:12px 0 0;box-shadow:none">
+      <div class="grupo" style="margin:0 0 4px">📦 Ajuste de quantidade</div>
+      <label>Quantidade contada agora</label><input id="aj-q" inputmode="decimal" value="${fmtN(i.estoque)}">
+      <label>Motivo</label><select id="aj-m"><option value="">Selecione...</option><option>Contagem física</option><option>Perda</option>
+        <option>Quebra / avaria</option><option>Furto / extravio</option><option>Erro de lançamento</option><option>Outro</option></select>
+      <label>Observação</label><input id="aj-o" placeholder="Opcional">
+      <button class="btn ok" style="margin-top:12px" onclick="confirmarAjuste(${idx})">Salvar ajuste</button>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn err" onclick="pedirExcluirItem(${idx})">🗑️ Excluir item</button>
+      <button class="btn sec" onclick="fecharModal()">Fechar</button>
+    </div>`);
+}
+function pedirExcluirItem(idx){
+  const i = ITENS[idx];
+  modal(`<h3>🗑️ Excluir item?</h3>
+    <div class="card" style="padding:10px 14px;margin:10px 0 0;box-shadow:none"><b>${esc(i.nome)}</b>
+      <div class="sub">${esc(i.codigo)} · ${esc(i.categoria)} · ${esc(i.tipo)} · estoque ${fmtN(i.estoque)} ${esc(i.unidade)}</div></div>
+    <p class="sub" style="margin:10px 2px">O item sai da lista e da aba <b>Itens ${esc(i.categoria)}</b> da planilha. As retiradas e entradas antigas continuam no histórico.
+      ${i.devolve ? 'Se houver unidades dele ainda fora (não devolvidas), a exclusão é bloqueada.' : ''}</p>
+    <label>Para confirmar, digite EXCLUIR</label><input id="ex-conf" autocomplete="off" placeholder="EXCLUIR">
+    <div class="row" style="margin-top:16px"><button class="btn sec" onclick="abrirAjuste(${idx})">Voltar</button>
+      <button class="btn err" onclick="confirmarExcluirItem(${idx})">Excluir</button></div>`);
+}
+function confirmarExcluirItem(idx){
+  if (($('ex-conf').value || '').trim().toUpperCase() !== 'EXCLUIR') { toast('Digite EXCLUIR para confirmar', false); return; }
+  const i = ITENS[idx];
+  Object.keys(carrinho).forEach(k => delete carrinho[k][i.codigo]);
+  ocupado(true);
+  api('excluirItem', i.codigo).then(r => {
+    ocupado(false); fecharModal(); toast(`${r.nome} excluído`, true); carregar();
+  }).catch(() => ocupado(false));
+}
+function salvarDadosItem(idx){
+  const i = ITENS[idx];
+  ocupado(true);
+  api('editarItem', { codigo:i.codigo, nome:$('ed-nome').value, tipo:$('ed-tipo').value }).then(r => {
+    ocupado(false); fecharModal();
+    toast(`${r.nome} atualizado (${r.mudou.join(' e ')})`, true); carregar();
+  }).catch(() => ocupado(false));
+}
+function confirmarAjuste(idx){
+  ocupado(true);
+  api('ajustarEstoque', { codigo:ITENS[idx].codigo, contagem:$('aj-q').value, motivo:$('aj-m').value, obs:$('aj-o').value }).then(r => {
+    ocupado(false); fecharModal(); toast(`Ajuste salvo (${r.diferenca > 0 ? '+' : ''}${r.diferenca})`, true); carregar();
+  }).catch(() => ocupado(false));
+}
+
+function adicionarAoEstoque(){
+  filtro.e = { cat:filtro.x.cat, tipo:'Todos' };
+  $('e-busca').value = $('x-busca').value;
+  controles('e'); irPara('entrada'); render('entrada');
+}
+function novoItem(){
+  const cat = filtro.x.cat === 'Elétrica' ? 'Elétrica' : 'Obra';
+  modal(`<h3>➕ Cadastrar novo item</h3>
+    <label>Aba</label><div class="seg" id="ni-cat"><button class="Obra ${cat === 'Obra' ? 'on' : ''}" data-c="Obra">🧱 Itens Obra</button><button class="Elétrica ${cat === 'Elétrica' ? 'on' : ''}" data-c="Elétrica">⚡ Itens Elétrica</button></div>
+    <label>Nome</label><input id="ni-nome" placeholder="Ex: Martelo de unha">
+    <label>Tipo</label><div id="ni-tipo-box"></div>
+    <label>Unidade</label><div id="ni-un-box"></div>
+    <div class="row"><div><label>Estoque inicial</label><input id="ni-est" inputmode="decimal" value="0"></div><div><label>Estoque mínimo</label><input id="ni-min" inputmode="decimal" value="0"></div></div>
+    <div class="row" style="margin-top:16px"><button class="btn sec" onclick="fecharModal()">Cancelar</button><button class="btn" onclick="salvarItem()">Cadastrar</button></div>`);
+  $('ni-cat').querySelectorAll('button').forEach(b => b.onclick = () => {
+    $('ni-cat').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    campoUnidade(b.dataset.c); campoTipo(b.dataset.c);
+  });
+  campoUnidade(cat); campoTipo(cat);
+}
+function campoTipo(cat){
+  const lista = TIPOS[cat] && TIPOS[cat].length ? TIPOS[cat] : ['Consumível', 'Ferramenta'];
+  $('ni-tipo-box').innerHTML = `<select id="ni-tipo">${lista.map(t => `<option value="${esc(t)}">${ICONE_TIPO[t] || '📦'} ${esc(t)}</option>`).join('')}</select>
+    <p class="sub" style="margin:6px 2px 0">Ferramenta e Máquinas precisam ser devolvidas; os outros tipos saem do estoque de vez.</p>`;
+}
+
+function campoUnidade(cat){
+  $('ni-un-box').innerHTML = cat === 'Obra' && UNIDADES_OBRA.length
+    ? `<select id="ni-un">${UNIDADES_OBRA.map(u => `<option>${esc(u)}</option>`).join('')}</select>`
+    : '<input id="ni-un" value="un">';
+}
+function salvarItem(){
+  const sel = id => $(id).querySelector('.on').dataset.c;
+  ocupado(true);
+  api('cadastrarItem', { nome:$('ni-nome').value, categoria:sel('ni-cat'), tipo:$('ni-tipo').value, unidade:$('ni-un').value,
+    estoque:$('ni-est').value, minimo:$('ni-min').value }).then(r => {
+    ocupado(false); fecharModal(); toast(`Item cadastrado: ${r.codigo}`, true); carregar();
+  }).catch(() => ocupado(false));
+}
+
+/*EQUIPE*/
+
+
+function carregarEquipe(){
+  $('q-lista').innerHTML = sk(4);
+  api('equipe').then(e => { EQUIPE = e; renderEquipe(); }).catch(() => {});
+}
+function renderEquipe(){
+  const q = $('q-busca').value.trim().toLowerCase();
+  const n = f => EQUIPE.filter(f).length;
+  const ops = [['Todos', () => true], ['CLT', x => x.contrato === 'CLT'], ['PJ', x => x.contrato === 'PJ'], ['Jovem Aprendiz', x => x.contrato === 'Jovem Aprendiz'], ['Com ferramentas', x => x.qtdFerramentas > 0]];
+  $('q-chips').innerHTML = ops.map(([t, f]) => `<button class="chip ${filtroEquipe === t ? 'on' : ''}" data-t="${t}">${t} · ${n(f)}</button>`).join('');
+  $('q-chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { filtroEquipe = b.dataset.t; renderEquipe(); });
+  const fil = ops.find(o => o[0] === filtroEquipe)[1];
+  const lista = EQUIPE.filter(fil).filter(f => !q || (f.nome + ' ' + f.funcao).toLowerCase().includes(q));
+  $('q-lista').innerHTML = lista.length ? lista.map(f => `<div class="item" style="cursor:pointer" onclick="fichaFuncionario('${EQUIPE.indexOf(f)}')">
+      <div class="av" style="background:var(--${classeContrato(f.contrato).toLowerCase()}-bg);color:var(--${classeContrato(f.contrato).toLowerCase()})">${esc(iniciais(f.nome))}</div>
+      <div class="info"><div class="nome">${esc(f.nome)}</div>
+        <div class="meta">${tagContrato(f.contrato)}<span class="sub">${esc(f.funcao || '—')}</span>
+        ${f.ativo ? '' : '<span class="tag baixo">Inativo</span>'}</div></div>
+      <div class="estq">${f.qtdFerramentas ? `<span class="tag ${f.ferramentas.some(p => p.dias >= DIAS_ATRASO) ? 'baixo' : 'D'}">🔧 ${f.qtdFerramentas}</span>` : '<span class="sub">—</span>'}</div></div>`).join('')
+    : vazio('👷', 'Ninguém encontrado');
+}
+function fichaFuncionario(i){
+  const f = EQUIPE[Number(i)];
+  modal(`<div class="row" style="align-items:center;gap:12px"><div class="av" style="width:52px;height:52px;font-size:18px;flex:0 0 52px">${esc(iniciais(f.nome))}</div>
+    <div><h3>${esc(f.nome)}</h3><div class="meta">${tagContrato(f.contrato)}<span class="sub">${esc(f.funcao || '')}</span></div></div></div>
+    <div class="grid2" style="margin:14px 0"><div class="kpi" style="box-shadow:none"><b>${f.qtdFerramentas}</b><span>ferramentas com ele(a)</span></div>
+      <div class="kpi" style="box-shadow:none"><b>${f.retiradasMes}</b><span>retiradas neste mês</span></div></div>
+    ${f.ferramentas.length ? '<div class="grupo" style="margin-top:0">Em posse</div>' + f.ferramentas.map(p => `<div class="lin"><div class="info"><div class="nome">${esc(p.pendente)} × ${esc(p.item)}</div>
+      <div class="sub">${esc(p.obra || 'sem obra')} · saiu ${esc(p.data)}</div></div><span class="tag ${p.dias >= DIAS_ATRASO ? 'baixo' : ''}">${p.dias} dias</span></div>`).join('')
+      : vazio('✅', 'Nenhuma ferramenta em posse')}
+    <div class="row" style="margin-top:14px">${f.ferramentas.length ? `<button class="btn so-edicao" onclick="devolverDe('${esc(f.nome).replace(/'/g, '')}')">↩️ Registrar devolução</button>` : ''}
+      <button class="btn sec" onclick="fecharModal()">Fechar</button></div>`);
+}
+function devolverDe(nome){ fecharModal(); irPara('devol'); $('d-busca').value = nome; }
+
+/*FUNCIONÁRIO NOVO*/
+function novoFuncionario(){
+  modal(`<h3>👷 Novo funcionário</h3>
+    <label>Nome completo</label><input id="nf-nome">
+    <label>Função</label><input id="nf-func" placeholder="Ex: Pedreiro, Eletricista">
+    <label>Tipo de contrato</label><div class="seg" id="nf-contr"><button class="on" data-c="CLT">CLT</button><button data-c="PJ">PJ</button><button data-c="Jovem Aprendiz">🎓 Aprendiz</button></div>
+    <div class="row" style="margin-top:16px"><button class="btn sec" onclick="fecharModal()">Cancelar</button><button class="btn" onclick="salvarFuncionario()">Cadastrar</button></div>`);
+  $('nf-contr').querySelectorAll('button').forEach(b => b.onclick = () => $('nf-contr').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)));
+  setTimeout(() => $('nf-nome').focus(), 80);
+}
+function salvarFuncionario(){
+  ocupado(true);
+  api('cadastrarFuncionario', { nome:$('nf-nome').value, funcao:$('nf-func').value, contrato:$('nf-contr').querySelector('.on').dataset.c }).then(r => {
+    ocupado(false); fecharModal(); toast(r.nome + ' cadastrado', true);
+    if (aba === 'saida') { $('s-func').value = r.nome; }
+    carregar().then(() => { infoFuncionario(); if (aba === 'equipe') carregarEquipe(); });
+  }).catch(() => ocupado(false));
+}
+
+/*QR CODE mas nem uso pra ser sincero, mas tem*/
+function escanear(){ $('scan-input').value = ''; $('scan-input').click(); }
+$('scan-input').onchange = e => {
+  const f = e.target.files[0]; if (!f) return;
+  lerQR(f).then(txt => { if (txt) tratarCodigo(txt); else toast('Não consegui ler o QR. Chegue mais perto, com boa luz.', false); });
+};
+function lerQR(file){
+  return new Promise(ok => {
+    const img = new Image();
+    img.onload = async () => {
+      const s = Math.min(1, 1200 / Math.max(img.width, img.height));
+      const c = document.createElement('canvas'); c.width = img.width * s; c.height = img.height * s;
+      const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(img.src);
+      if ('BarcodeDetector' in window) { try { const r = await new BarcodeDetector({ formats:['qr_code'] }).detect(c); if (r[0]) return ok(r[0].rawValue); } catch(e) {} }
+      if (window.jsQR) { const d = ctx.getImageData(0, 0, c.width, c.height); const r = jsQR(d.data, c.width, c.height); if (r) return ok(r.data); }
+      ok('');
+    };
+    img.onerror = () => ok('');
+    img.src = URL.createObjectURL(file);
+  });
+}
+function tratarCodigo(txt){
+  const m = /[?&]item=([^&#]+)/.exec(txt);
+  const cod = decodeURIComponent(m ? m[1] : txt).trim().toLowerCase();
+  const idx = ITENS.findIndex(i => i.codigo.toLowerCase() === cod);
+  if (idx < 0) { toast('Item não encontrado: ' + cod, false); return; }
+  const i = ITENS[idx], ed = USR && USR.podeEditar;
+  modal(`<span class="tag ${esc(i.categoria)}">${i.categoria === 'Obra' ? '🧱' : '⚡'} ${esc(i.categoria)}</span>
+    <h3 style="margin-top:8px">${esc(i.nome)}</h3><p class="sub" style="margin:2px 0 0">${esc(i.codigo)} · ${esc(i.tipo)} · estoque <b>${i.estoque} ${esc(i.unidade)}</b></p>
+    ${barraEstoque(i)}
+    <div style="display:grid;gap:8px;margin-top:16px">
+      <button class="btn ok" onclick="acaoQR(${idx},'saida')">📤 Adicionar à retirada</button>
+      ${i.devolve ? `<button class="btn" onclick="acaoQR(${idx},'devol')">↩️ Ver com quem está / devolver</button>` : ''}
+      ${ed ? `<button class="btn warn" onclick="acaoQR(${idx},'entrada')">📥 Adicionar à entrada</button>` : ''}
+      <button class="btn sec" onclick="fecharModal()">Fechar</button></div>`);
+}
+function acaoQR(idx, destino){
+  const i = ITENS[idx]; fecharModal();
+  if (destino === 'devol') { irPara('devol'); $('d-busca').value = i.nome; return; }
+  irPara(destino); mudar(destino, idx, 1); toast(`${i.nome} adicionado`, true);
+}
+function abrirEtiquetas(){ $('etiquetas').style.display = 'block'; gerarEtiquetas(); }
+function gerarEtiquetas(){
+  const f = $('etq-filtro').value;
+  const lista = ITENS.filter(i => f === 'Todos' || (f === 'Ferramenta' ? i.devolve : i.categoria === f));
+  const g = $('etq-grade');
+  if (!window.QRCode) { g.innerHTML = vazio('⚠️', 'Não foi possível carregar o gerador de QR. Verifique a internet.'); return; }
+  g.innerHTML = lista.map((i, k) => `<div class="etq ${esc(i.categoria)}"><div class="q" id="qr-${k}"></div><b>${esc(i.nome)}</b><small>${esc(i.codigo)} · ${esc(i.categoria)}</small></div>`).join('')
+    || vazio('🏷️', 'Nenhum item nesse filtro');
+  lista.forEach((i, k) => new QRCode($('qr-' + k), { text: APP_URL ? APP_URL + '?item=' + encodeURIComponent(i.codigo) : i.codigo,
+    width:130, height:130, correctLevel:QRCode.CorrectLevel.M }));
+}
+
+/*RELATÓRIOS de mes e funcionario*/
+
+
+let REL = { tipo:'empregador', modo:'mes' }, REL_DADOS = null;
+const pad2 = n => String(n).padStart(2, '0');
+const isoData = d => d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+function preencherMeses(){
+  const sel = $('r-mes'), atual = sel.value;
+  sel.innerHTML = MESES_DISP.map(k => { const [a, m] = k.split('-').map(Number); return `<option value="${k}">${pad2(m)}/${a} — ${NOMES_MES[m - 1]}</option>`; }).join('');
+  if (atual && MESES_DISP.indexOf(atual) >= 0) sel.value = atual;
+  const fs = $('r-func'), fAtual = fs.value;
+  fs.innerHTML = '<option value="">Selecione o colaborador...</option>' + FUNCS.map(f => `<option ${f.nome === fAtual ? 'selected' : ''}>${esc(f.nome)}</option>`).join('');
+  if (!$('r-ini').value) { const h = new Date(); $('r-ini').value = isoData(new Date(h.getFullYear(), h.getMonth(), 1)); $('r-fim').value = isoData(h); }
+}
+['r-tipo', 'r-modo'].forEach(id => $(id).querySelectorAll('button').forEach(b => b.onclick = () => {
+  $(id).querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  if (id === 'r-tipo') { REL.tipo = b.dataset.c; $('r-func-box').classList.toggle('escondido', REL.tipo !== 'colaborador'); }
+  else { REL.modo = b.dataset.c; $('r-mes-box').classList.toggle('escondido', REL.modo !== 'mes'); $('r-per-box').classList.toggle('escondido', REL.modo === 'mes'); }
+  $('r-corpo').innerHTML = '';
+}));
+function paramsRelatorio(){
+  const p = { tipo:REL.tipo };
+  if (REL.tipo === 'colaborador') { p.funcionario = $('r-func').value; if (!p.funcionario) return null; }
+  if (REL.modo === 'mes') p.mes = $('r-mes').value; else { p.ini = $('r-ini').value; p.fim = $('r-fim').value; }
+  return p;
+}
+function carregarRelatorio(){
+  const p = paramsRelatorio();
+  if (!p) { $('r-corpo').innerHTML = vazio('👷', 'Escolha o colaborador e toque em Gerar relatório'); return; }
+  if (!p.mes && (!p.ini || !p.fim)) { toast('Informe as datas do período', false); return; }
+  $('r-corpo').innerHTML = sk(3);
+  api('relatorio', p).then(r => { REL_DADOS = { p, r }; r.tipo === 'colaborador' ? desenharRelColaborador(r) : desenharRelEmpregador(r); })
+    .catch(() => { $('r-corpo').innerHTML = ''; });
+}
+function barraExportar(r){
+  return `<div class="card no-print" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <div style="flex:1 1 100%" class="sub"><b>${esc(r.periodo.txt)}</b></div>
+    <button class="btn ok peq" style="flex:1" onclick="exportar('planilha')">📗 Planilha</button>
+    <button class="btn err peq" style="flex:1" onclick="exportar('pdf')">📕 PDF</button>
+    <button class="btn sec peq" style="flex:1" onclick="imprimirRelatorio()">🖨️ Imprimir</button></div>`;
+}
+function exportar(formato){
+  if (!REL_DADOS) return;
+  modal(`<h3>${formato === 'pdf' ? '📕 Gerando PDF...' : '📗 Gerando planilha...'}</h3><p class="sub">Isso leva alguns segundos.</p>${sk(2)}`);
+  api('exportarRelatorio', REL_DADOS.p, formato).then(o => {
+    modal(`<h3>✅ Relatório pronto</h3><p class="sub" style="margin:4px 0 14px">${esc(o.nome)}<br>Salvo no Drive, na pasta <b>Almoxarifado - Arquivos › Relatórios</b>.</p>
+      <div style="display:grid;gap:8px">
+        ${o.pdf ? `<a class="btn err" href="${esc(o.pdf)}" target="_blank" style="text-decoration:none">📕 Abrir / baixar PDF</a>` : ''}
+        <a class="btn ok" href="${esc(o.planilha)}" target="_blank" style="text-decoration:none">📗 Abrir no Google Planilhas (editar)</a>
+        <a class="btn sec" href="${esc(o.excel)}" target="_blank" style="text-decoration:none">⬇️ Baixar como Excel (.xlsx)</a>
+        <button class="btn sec" onclick="fecharModal()">Fechar</button></div>`);
+  }).catch(() => fecharModal());
+}
+const tabela = (cab, linhas) => `<div style="overflow-x:auto"><table class="t"><tr>${cab.map(c => `<td class="sub" style="font-weight:800">${c}</td>`).join('')}</tr>${linhas.join('')}</table></div>`;
+function desenharRelEmpregador(r){
+  const semPreco = !r.resumo.custoTotal;
+  const kpi = (ico, bg, n, t) => `<div class="kpi"><div class="i" style="background:${bg}">${ico}</div><b>${n}</b><span>${t}</span></div>`;
+  const linhaRes = (t, v) => `<div class="lin"><div class="info">${t}</div><b>${v}</b></div>`;
+  const tabelaEstoque = cat => {
+    const itens = r.estoque.filter(x => x.categoria === cat);
+    return `<div class="card"><h3>${cat === 'Obra' ? '🧱' : '⚡'} Estoque — Itens ${cat} <span class="muted" style="font-weight:600;font-size:12px">${itens.length} item(ns)</span></h3>
+      ${itens.length ? '<div class="t-estoque">' + tabela(['ID Produto', 'Nome Produto', 'Tipo Produto', 'Quanti&shy;dade', 'Quantidade Mínima', 'Unidade de Medida'], itens.map(x => {
+        const baixo = x.quantidade <= x.minimo;
+        return `<tr><td style="white-space:nowrap">${esc(x.codigo)}</td><td>${esc(x.nome)}</td><td class="sub">${esc(x.tipo)}</td>
+          <td class="n" style="${baixo ? 'color:var(--err)' : ''}">${baixo ? '⚠️ ' : ''}${fmtN(x.quantidade)}</td><td class="n">${fmtN(x.minimo)}</td><td class="sub">${esc(x.unidade)}</td></tr>`;
+      })) + '</div>' : vazio('📦', 'Nenhum item cadastrado')}</div>`;
+  };
+  $('r-corpo').innerHTML = barraExportar(r) + `<div class="card"><h3>🏢 Relatório do Empregador</h3><div class="sub">${esc(r.periodo.txt)}</div></div>
+    <div class="grid2">${kpi('📤', 'var(--err-bg)', r.resumo.retiradas, 'retiradas')}${kpi('📥', 'var(--ok-bg)', r.resumo.entradas, 'entradas')}
+      ${kpi('↩️', 'var(--elet-bg)', r.resumo.devolucoes, 'devoluções')}${kpi('💰', 'var(--pri-bg)', semPreco ? fmtN(r.resumo.itensRetirados) : `<span style="font-size:17px">${moeda(r.resumo.custoTotal)}</span>`, semPreco ? 'quantidade retirada' : 'consumo')}</div>
+    <div class="card" style="margin-top:12px"><h3>📋 Resumo</h3>
+      ${linhaRes('Quantidade retirada', fmtN(r.resumo.itensRetirados))}${linhaRes('Ajustes de inventário', r.resumo.ajustes)}
+      ${linhaRes('Colaboradores que retiraram', r.resumo.colaboradores)}${linhaRes('Ferramentas fora hoje', fmtN(r.resumo.foraAgora))}</div>
+    ${tabelaEstoque('Obra')}${tabelaEstoque('Elétrica')}
+    <p class="sub" style="margin:0 4px 12px">⚠️ Em vermelho: no estoque mínimo ou abaixo. As quantidades são as de agora.</p>`;
+}
+function relDoColaborador(nome){
+  REL.tipo = 'colaborador';
+  $('r-tipo').querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.c === 'colaborador'));
+  $('r-func-box').classList.remove('escondido');
+  if (![...$('r-func').options].some(o => o.value === nome)) $('r-func').insertAdjacentHTML('beforeend', `<option>${esc(nome)}</option>`);
+  $('r-func').value = nome;
+  carregarRelatorio(); window.scrollTo({ top:0, behavior:'smooth' });
+}
+function desenharRelColaborador(r){
+  const kpi = (ico, bg, n, t) => `<div class="kpi"><div class="i" style="background:${bg}">${ico}</div><b>${n}</b><span>${t}</span></div>`;
+  $('r-corpo').innerHTML = barraExportar(r) + `<div class="card"><div class="row" style="align-items:center;gap:12px">
+      <div class="av" style="width:52px;height:52px;font-size:18px;flex:0 0 52px">${esc(iniciais(r.nome))}</div>
+      <div><h3 style="margin:0">👷 ${esc(r.nome)}</h3><div class="meta">${r.contrato ? tagContrato(r.contrato) : ''}<span class="sub">${esc(r.funcao || '')}</span></div>
+      <div class="sub" style="margin-top:4px">${esc(r.periodo.txt)}</div></div></div></div>
+    <div class="grid2">${kpi('📤', 'var(--err-bg)', r.resumo.retiradas, 'retiradas')}${kpi('📦', 'var(--warn-bg)', fmtN(r.resumo.itens), 'quantidade retirada')}
+      ${kpi('↩️', 'var(--elet-bg)', fmtN(r.resumo.devolucoes), 'quantidade devolvida')}${kpi('🔧', 'var(--pri-bg)', fmtN(r.resumo.emPosse), 'em posse hoje')}</div>
+    <div class="card" style="margin-top:12px"><h3>📤 Retiradas</h3>${r.retiradas.length ? tabela(['Data', 'Item', 'Qtd', 'Obra'], r.retiradas.map(m =>
+      `<tr><td style="white-space:nowrap">${esc(m.data.slice(0, 10))}</td><td>${esc(m.item)}${m.devolve ? (m.pendente ? ` <span class="tag baixo">fora: ${fmtN(m.pendente)}</span>` : ' <span class="tag E">devolvido</span>') : ''}</td>
+        <td class="n">${fmtN(m.qtd)} <span class="sub">${esc(m.unidade)}</span></td><td class="sub">${esc(m.obra)}</td></tr>`)) : vazio('📭', 'Nenhuma retirada no período')}</div>
+    <div class="card"><h3>↩️ Devoluções</h3>${r.devolucoes.length ? tabela(['Data', 'Item', 'Qtd'], r.devolucoes.map(m =>
+      `<tr><td style="white-space:nowrap">${esc(m.data.slice(0, 10))}</td><td>${esc(m.item)}</td><td class="n">${fmtN(m.qtd)}</td></tr>`)) : vazio('📭', 'Nenhuma devolução no período')}</div>
+    <div class="card"><h3>🔧 Ferramentas em posse hoje</h3>${r.posse.length ? r.posse.map(x => `<div class="lin"><div class="info"><div class="nome">${fmtN(x.pendente)} × ${esc(x.item)}</div>
+      <div class="sub">${esc(x.obra || 'sem obra')} · saiu ${esc(x.diaTxt || x.data)}</div></div><span class="tag ${x.dias >= DIAS_ATRASO ? 'baixo' : ''}">${x.dias} dias</span></div>`).join('') : vazio('✅', 'Nenhuma ferramenta em posse')}</div>`;
+}
+const somaQtd = o => o.consumo.reduce((s, x) => s + x.qtd, 0);
+function imprimirRelatorio(){ document.body.classList.add('imprimir-rel'); window.print(); setTimeout(() => document.body.classList.remove('imprimir-rel'), 500); }
+
+/*HISTÓRICO*/
+
+
+const SIGLA = { 'SAÍDA':'S', 'ENTRADA':'E', 'DEVOLUÇÃO':'D', 'AJUSTE':'A', 'ESTORNO':'X' };
+function linhaHist(h, k, comData){
+  const est = /^\[ESTORNADO\]/.test(h.obs);
+  const obs = h.obs.replace(/\[TESTE\]\s*/, '');
+  const acoes = [
+    /^https:\/\//.test(h.anexo) ? `<a class="link" href="${esc(h.anexo)}" target="_blank">📎 anexo</a>` : '',
+    k !== undefined && h.estornavel ? `<button class="link so-edicao" style="color:var(--warn)" onclick="pedirEstorno(${k})">↩️ Estornar</button>` : '',
+    k !== undefined && h.mov !== 'ESTORNO' ? `<button class="link so-edicao" style="color:var(--err)" onclick="pedirApagar(${k})">🗑️ Apagar</button>` : ''
+  ].filter(Boolean).join('');
+  return `<div class="lin" style="align-items:flex-start;${est ? 'opacity:.55' : ''}"><span class="tag ${SIGLA[h.mov] || 'A'}" style="flex:0 0 auto;margin-top:2px">${esc(h.mov)}</span>
+    <div class="info"><div class="nome" style="white-space:normal;${est ? 'text-decoration:line-through' : ''}">${esc(h.qtd)} × ${esc(h.item)} ${h.teste ? '<span class="tag T">🧪 teste</span>' : ''}</div>
+      <div class="sub">${esc(comData ? h.data : h.data.slice(6))} · ${esc(h.pessoa || '-')}${h.obra ? ' · ' + esc(h.obra) : ''} · por ${esc(h.por)}${(h.mov === 'AJUSTE' || h.mov === 'ESTORNO') && obs ? ' · ' + esc(obs) : ''}</div>
+      ${acoes ? `<div class="acoes">${acoes}</div>` : ''}</div></div>`;
+}
+function carregarHistorico(){
+  $('h-lista').innerHTML = sk(5);
+  api('historico').then(h => { HIST = h; renderHistorico(); }).catch(() => {});
+}
+function renderHistorico(){
+  const ops = ['Todos', 'SAÍDA', 'ENTRADA', 'DEVOLUÇÃO', 'AJUSTE', 'ESTORNO'].concat(HIST.some(h => h.teste) ? ['TESTE'] : []);
+  const nomes = { 'Todos':'Todos', 'SAÍDA':'Saídas', 'ENTRADA':'Entradas', 'DEVOLUÇÃO':'Devoluções', 'AJUSTE':'Ajustes', 'ESTORNO':'Estornos', 'TESTE':'🧪 Testes' };
+  if (ops.indexOf(filtroHist) < 0) filtroHist = 'Todos';
+  const obras = [...new Set(HIST.map(h => h.obra).filter(Boolean))].sort();
+  const obraSel = obras.indexOf($('h-obra').value) >= 0 ? $('h-obra').value : '';
+  $('h-obra').innerHTML = '<option value="">🏗️ Todas as obras</option>' + obras.map(o => `<option ${o === obraSel ? 'selected' : ''}>${esc(o)}</option>`).join('');
+  const dias = Number($('h-periodo').value), cat = $('h-cat').value;
+  $('h-chips').innerHTML = ops.map(o => `<button class="chip ${filtroHist === o ? 'on' : ''}" data-o="${o}">${nomes[o]}</button>`).join('');
+  $('h-chips').querySelectorAll('.chip').forEach(b => b.onclick = () => { filtroHist = b.dataset.o; renderHistorico(); });
+  const q = $('h-busca').value.trim().toLowerCase();
+  const hoje = new Date(), ontem = new Date(Date.now() - 86400000);
+  const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  const rotulo = dia => dia === iso(hoje) ? 'Hoje' : dia === iso(ontem) ? 'Ontem' :
+    new Date(dia + 'T12:00').toLocaleDateString('pt-BR', { weekday:'short', day:'2-digit', month:'short' });
+  let ultimoDia = '', html = '';
+  HIST.forEach((h, k) => {
+    if (filtroHist === 'TESTE' ? !h.teste : filtroHist !== 'Todos' && h.mov !== filtroHist) return;
+    if (dias && h.dia < iso(new Date(Date.now() - (dias - 1) * 86400000))) return;
+    if (obraSel && h.obra !== obraSel) return;
+    if (cat && h.codigo.indexOf(cat) !== 0) return;
+    if (q && !(h.pessoa + ' ' + h.item + ' ' + h.obra + ' ' + h.por).toLowerCase().includes(q)) return;
+    if (h.dia !== ultimoDia) { html += (ultimoDia ? '</div>' : '') + `<div class="grupo">${esc(rotulo(h.dia))}</div><div class="card" style="padding:12px 14px">`; ultimoDia = h.dia; }
+    html += linhaHist(h, k);
+  });
+  $('h-lista').innerHTML = html ? html + '</div>' : vazio('🕘', 'Nenhuma movimentação');
+}
+function pedirEstorno(k){
+  const h = HIST[k];
+  const doMesmo = HIST.filter(x => x.id === h.id);
+  modal(`<h3>↩️ Estornar ${h.mov === 'SAÍDA' ? 'retirada' : 'entrada'}</h3>
+    <p class="sub" style="margin:4px 0 10px">Use quando o lançamento foi feito errado. O estoque volta ao que era antes e o registro fica riscado no histórico.</p>
+    <div class="card" style="padding:10px 14px;box-shadow:none">${doMesmo.map(x => `<div style="padding:3px 0">• ${esc(x.qtd)} × ${esc(x.item)}</div>`).join('')}
+      <div class="sub" style="margin-top:4px">${esc(h.data)} · ${esc(h.pessoa)}</div></div>
+    <label>Motivo</label><input id="es-m" placeholder="Ex: lançado em duplicidade">
+    <div class="row" style="margin-top:16px"><button class="btn sec" onclick="fecharModal()">Cancelar</button><button class="btn err" onclick="confirmarEstorno(${k})">Estornar</button></div>`);
+}
+function pedirApagar(k){
+  const h = HIST[k];
+  const doMesmo = HIST.filter(x => x.id === h.id && x.aba === h.aba);
+  const efeito = { 'SAÍDA':'Os itens voltam para o estoque' + (doMesmo.some(x => ITENS.some(i => i.codigo === x.codigo && i.devolve)) ? ' e as ferramentas deixam de aparecer como pendentes (as devoluções dela também são apagadas).' : '.'),
+    'ENTRADA':'Os itens saem do estoque (como se a entrada não tivesse acontecido).',
+    'DEVOLUÇÃO':'Os itens saem do estoque e voltam a aparecer como pendentes com a pessoa.',
+    'AJUSTE':'O estoque volta ao valor de antes do ajuste.' }[h.mov] || '';
+  modal(`<h3>🗑️ Apagar ${h.mov.toLowerCase()}?</h3>
+    <p class="sub" style="margin:4px 0 10px">${/^\[ESTORNADO\]/.test(h.obs) ? 'Este lançamento já foi estornado; ele e o estorno serão removidos, sem mexer no estoque.' : esc(efeito)}</p>
+    <div class="card" style="padding:10px 14px;box-shadow:none">${doMesmo.map(x => `<div style="padding:3px 0">• ${esc(x.qtd)} × ${esc(x.item)}</div>`).join('')}
+      <div class="sub" style="margin-top:4px">${esc(h.data)} · ${esc(h.pessoa || '-')} · ${esc(h.id)}</div></div>
+    ${h.teste ? '' : `<label>Não é um teste. Para confirmar, digite APAGAR</label><input id="ap-conf" autocomplete="off" placeholder="APAGAR">`}
+    <div class="row" style="margin-top:16px"><button class="btn sec" onclick="fecharModal()">Cancelar</button><button class="btn err" onclick="confirmarApagar(${k})">Apagar</button></div>`);
+}
+function confirmarApagar(k){
+  const h = HIST[k];
+  if (!h.teste && ($('ap-conf').value || '').trim().toUpperCase() !== 'APAGAR') { toast('Digite APAGAR para confirmar', false); return; }
+  ocupado(true);
+  api('excluirLancamento', { aba:h.aba, id:h.id }).then(r => {
+    ocupado(false); fecharModal(); toast(`Lançamento apagado (${r.linhas} linha(s)) e estoque corrigido`, true); carregarHistorico(); carregar();
+  }).catch(() => ocupado(false));
+}
+function confirmarEstorno(k){
+  const h = HIST[k];
+  ocupado(true);
+  api('estornar', { aba:h.aba, id:h.id, motivo:$('es-m').value }).then(r => {
+    ocupado(false); fecharModal(); toast(`Estorno feito (${r.total} itens)`, true); carregarHistorico(); carregar();
+  }).catch(() => ocupado(false));
+}
+</script>
+</body>
+</html>
