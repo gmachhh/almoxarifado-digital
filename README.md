@@ -132,5 +132,5 @@ Abas criadas na planilha:
 
 ## 👤 Autor
 
-**Seu Nome**
+**Erick Gabriel Seixas de Freitas Machado**
 [LinkedIn](https://www.linkedin.com/in/seu-perfil) · [GitHub](https://github.com/seu-usuario)
